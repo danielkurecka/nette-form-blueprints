@@ -1,0 +1,40 @@
+{
+	"name": "daku/nette-form-blueprints",
+	"type": "library",
+	"description": "Manual rendering of Nette forms made easy.",
+	"keywords": ["nette", "latte", "tracy-panel", "forms-generator", "bootstrap4", "bootstrap3"],
+
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Daniel Kurečka",
+			"email": "danielkurecka@gmail.com"
+		}
+	],
+
+	"require": {
+		"php": ">=7.1",
+		"nette/application": "^2.4.1 | ^3.0",
+		"nette/forms": "^2.4 | ^3.0",
+		"nette/utils": "^2.4 | ^3.0",
+		"latte/latte": "^2.4.1 | ^3.0"
+	},
+
+	"require-dev": {
+		"nette/nette": "^2.4 | ^3.0",
+		"nette/tester": "^2.3.2"
+	},
+
+	"autoload": {
+		"psr-4": {
+			"Daku\\Nette\\FormBlueprints\\": "src"
+		}
+	},
+
+	"autoload-dev": {
+		"psr-4": {
+			"Daku\\Nette\\FormBlueprints\\Tests\\": "tests/automated",
+			"Daku\\Nette\\FormBlueprints\\Tests\\TestApp\\": "tests/testApp/app"
+		}
+	}
+}

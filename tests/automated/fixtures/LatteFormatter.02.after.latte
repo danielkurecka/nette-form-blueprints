@@ -1,0 +1,21 @@
+<form n:name="simpleForm" novalidate>
+	{formContainer foo}
+		<ul class="error" n:ifcontent>
+			<li n:foreach="$form->ownErrors as $error">{$error}</li>
+		</ul>
+		<table>
+			<tr n:class="$form[test]->required ? required">
+				<th>{label test/}</th>
+				<td>
+					<input n:name="test">
+					<small>Description placeholder</small>
+					<span class="error" n:ifcontent>{inputError}</span>
+				</td>
+			</tr>
+			<tr>
+				<th></th>
+				<td><input n:name="submit"></td>
+			</tr>
+		</table>
+	{/formContainer}
+</form>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Form Blueprints test app</title>
+	<script src="https://cdn.jsdelivr.net/npm/nette-forms@3/src/assets/netteForms.js"></script>
+	<style>
+		.container {
+			max-width: 900px;
+			margin: auto;
+		}
+
+		.nav {
+			padding: 0;
+		}
+
+		.nav li {
+			display: inline;
+			padding: 5px;
+			list-style: none;
+		}
+	</style>
+</head>
+<body>
+	<main class="container">
+		<ul class="nav">
+			<li><a n:href="basic" n:tag-if="!$presenter->isLinkCurrent('basic')">Basic form</a></li>
+			<li><a n:href="containers" n:tag-if="!$presenter->isLinkCurrent('containers')">Containers form</a></li>
+			<li><a n:href="groups" n:tag-if="!$presenter->isLinkCurrent('groups')">Groups form</a></li>
+			<li><a n:href="multiple" n:tag-if="!$presenter->isLinkCurrent('multiple')">Multiple forms</a></li>
+			<li><a n:href="noLabels" n:tag-if="!$presenter->isLinkCurrent('noLabels')">No labels form</a></li>
+			<li><a n:href="zero" n:tag-if="!$presenter->isLinkCurrent('zero')">Zero forms</a></li>
+			<li><a n:href="manuallyAdded" n:tag-if="!$presenter->isLinkCurrent('manuallyAdded')">Manually added form</a></li>
+		</ul>
+		{if !$presenter->isLinkCurrent('zero')}
+			<h3>Simple form</h3>
+			{control simpleForm}
+		{/if}
+		{include content}
+	</main>
+</body>
+</html>

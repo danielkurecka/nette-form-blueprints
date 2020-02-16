@@ -1,0 +1,16 @@
+application:
+	mapping:
+		*: Daku\Nette\FormBlueprints\Tests\TestApp\*Presenter
+
+services:
+	router: Nette\Application\Routers\SimpleRouter('Homepage:basic')
+
+extensions:
+	formBlueprints: Daku\Nette\FormBlueprints\BlueprintsExtension
+
+formBlueprints:
+#	showPreview: false
+#	indentation: '  '
+#	templates:
+#		- Daku\Nette\FormBlueprints\Templates\TableTemplate
+#		- Daku\Nette\FormBlueprints\Templates\Bootstrap4Template

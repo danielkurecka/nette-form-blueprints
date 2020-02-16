@@ -1,0 +1,315 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Daku\Nette\FormBlueprints;
+
+use Tracy\Helpers;
+
+/**
+ * @var $this BlueprintsPanel
+ */
+
+?>
+<h1>Form Blueprints</h1>
+<div class="tracy-inner">
+	<?php if ($this->forms): ?>
+		<template>
+			<style>
+				* {box-sizing: border-box;}
+				h2, h3 {font: normal normal 16px/1.4 Tahoma, sans-serif;color: #575753;margin: 0 0 5px 0;}
+				h3 {margin: 10px 0 5px 0;font-size: 14px;}
+				.container {display: flex;font: normal normal 12px/1.5 sans-serif;background: white;color: #333;margin: 0 10px 10px 5px;}
+				aside {padding-right: 10px;flex: 0 0 180px;}  main {width: 100%;}
+				.tab-row {display: flex;border-bottom: 1px solid #d6d6d6;margin-bottom: 10px;}
+				.tab {padding: 10px;user-select: none;}
+				.tab-selected {font-weight: bold;border: 1px solid #d6d6d6;border-radius: 3px 3px 0 0;border-bottom: none;box-shadow: 0px 2px 0px 0px #fff;}
+				.auto-resizable {max-width: 580px;max-height: 390px;overflow: auto;padding: 5px 10px;}
+				.form-link-list {margin-bottom: 5px}
+				a, .form-link:not(.form-link-selected), .tab:not(.tab-selected) {color: #125eae;text-decoration: none;cursor: pointer;}
+				.form-link-selected {font-weight: bold;}
+				.info-form-file {word-wrap: break-word;margin-top: 0;}
+				a:hover, .form-link:not(.form-link-selected):hover, .tab:not(.tab-selected):hover {background-color: #125eae;color: white;}
+				.tab:not(.tab-selected):hover {border-radius: 3px 3px 0 0;}
+				ul {margin: 0;padding: 0;list-style: none;}
+				li {padding: 0 0 2px 0;}
+				.option-check label {user-select: none;}
+				.option-check label[title] {text-decoration: underline #aeaeae; text-decoration-style: dotted;}
+				.option {margin-bottom: 5px;}
+				.copyButton {display: inline-block;position: relative;}
+				.tooltip {color: #fff;background-color: #333;border-radius: 6px;padding: 3px 8px;position: absolute;z-index: 1;top: -5px;right: 110%;}
+				.tooltip::after {content: '';position: absolute;top: 50%;left: 100%;margin-top: -5px;border: 5px solid;border-color: transparent transparent transparent #333;}
+				.render-location {margin-top: 5px;}
+				/* styles for Prism syntax highlighting */
+				pre {border-radius: 5px; border: 1px dotted silver; background: #f1f7ff;box-shadow: inset 1px 1px 10px #e9f1fd;padding: 10px;}
+				code {font-family: Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace;}
+				code[class*=language-], pre[class*=language-] {color: #000;text-shadow: 0 1px #ffffffc2;white-space: pre;word-spacing: normal;word-break: normal;word-wrap: normal;-moz-tab-size: 4;tab-size: 4;hyphens: none}
+				code[class*=language-] ::selection, code[class*=language-]::selection, pre[class*=language-] ::selection, pre[class*=language-]::selection {text-shadow: none;background: #b3d4fc}
+				.token.cdata, .token.comment, .token.doctype, .token.prolog {color: #708090}
+				.token.punctuation {color: #999}
+				.namespace {opacity: .7}
+				.token.boolean, .token.constant, .token.deleted, .token.number, .token.property, .token.symbol, .token.tag {color: #905}
+				.token.attr-name, .token.builtin, .token.char, .token.inserted, .token.selector, .token.string {color: #338d00}
+				.language-css .token.string, .token.entity, .token.operator, .token.url, .style .token.string {color: #9a6e3a}
+				.token.atrule, .token.attr-value, .token.keyword {color: #2282bb}
+				.token.class-name, .token.function {color: #e23140}
+				.token.important, .token.regex, .token.variable {color: #d59401}
+				.token.bold, .token.important {font-weight: 700}
+				.token.italic {font-style: italic}
+				.token.entity {cursor: help}
+				pre > code .token.deleted:not(.prefix) {background-color: rgba(255, 0, 0, .1);color: inherit;display: block}
+				pre > code .token.inserted:not(.prefix) {background-color: rgba(0, 255, 128, .1);color: inherit;display: block}
+				.language-latte .token.tag {color: #559d00;font-weight: 700}
+				.language-latte .token.attr-name {color: #89a315}
+				.language-latte .token.attr-value {color: #448ccb;font-weight: 700}
+				.language-latte .token.property {font-weight: 700}
+				.language-latte .token.ld .token.tag, .language-latte .token.n-attr .token.attr-name {color: #e03c3c;font-weight: 700}
+			</style>
+			<div class="container">
+				<aside>
+					<h2>Added forms:</h2>
+					<ul class="form-link-list">
+						<?php foreach ($this->forms as $form): ?>
+							<li>
+								<span id="<?= $this->getFormId($form) ?>" title="<?= $this->getFormTitle($form) ?>" class="form-link<?= $this->getCurrentForm() === $form ? ' form-link-selected' : '' ?>">
+									<?= $this->getFormName($form) ?>
+								</span>
+							</li>
+						<?php endforeach; ?>
+					</ul>
+					<h2>Blueprint template:</h2>
+					<select class="template-select">
+						<?php foreach ($this->templates as $template): ?>
+							<option value="<?= $template->getName() ?>"<?= $this->getCurrentTemplate() === $template ? ' selected' : '' ?>>
+								<?= $template->getName() ?>
+							</option>
+						<?php endforeach; ?>
+					</select>
+					<h3>Template options:</h3>
+					<div class="template-options">
+						<?= $this->createTemplateOptions($this->getCurrentTemplate()) ?>
+					</div>
+				</aside>
+				<main>
+					<?php ?>
+					<div class="tab-row">
+						<div class="tab" data-tab-name="latte" data-target-hide=".detail" data-target-show=".detail-latte">
+							Latte
+						</div>
+						<div class="tab" data-tab-name="css" data-target-hide=".detail" data-target-show=".detail-css">
+							CSS
+						</div>
+						<div class="tab" data-tab-name="preview" data-target-hide=".detail" data-target-show=".detail-preview"<?= !$this->showPreview ? ' hidden' : '' ?>>
+							Preview
+						</div>
+					</div>
+					<?php list($file, $html, $preview) = $this->prepareBlueprint($this->getCurrentForm(), $this->getCurrentTemplate()) ?>
+					<div class="detail detail-latte" hidden>
+						<p>
+							<span class="copyButton"><span class="tooltip" hidden>Copied</span> <a href="#">Copy to clipboard</a></span> |
+							<a href="<?= Helpers::editorUri($file) ?>" class="html-editor-link" title="<?= $file ?>">Open in editor</a>
+						</p>
+						<pre class="auto-resizable"><code class="language-latte"><?= htmlspecialchars($html) ?></code></pre>
+					</div>
+						<div class="detail detail-preview auto-resizable" hidden>
+							<p class="preview-unavailable-text" <?= $this->getCurrentForm()->isAnchored() ? ' hidden' : '' ?>>
+								Preview is not available, form was not attached to a presener.
+							</p>
+							<template><?= $preview ?></template>
+						</div>
+					<div class="detail detail-css" hidden>
+						<p><span class="copyButton"><span class="tooltip" hidden>Copied</span> <a href="#">Copy to clipboard</a></span></p>
+						<pre class="auto-resizable"><code class="language-latte"><?= htmlspecialchars($this->getCurrentTemplate()->getStyles()) ?></code></pre>
+					</div>
+				</main>
+			</div>
+		</template>
+		<script>
+			(function () {
+				function getSelectedFormId(root) {
+					var result = null;
+					root.querySelectorAll('.form-link').forEach(function (el) {
+						if (el.classList.contains('form-link-selected')) {
+							result = el.id;
+						}
+					});
+					return result;
+				}
+
+				function getSelectedTemplateName(root) {
+					var select = root.querySelector('.template-select');
+					return select.options[select.selectedIndex].text;
+				}
+
+				function copyToClipboard(element) {
+					var textArea = document.createElement('textarea');
+					textArea.style.position = 'fixed';
+					textArea.value = element.textContent;
+					document.body.appendChild(textArea);
+					textArea.select();
+					var result = true;
+					try {
+						document.execCommand('copy');
+					} catch (err) {
+						result = false;
+					}
+					document.body.removeChild(textArea);
+					return result;
+				}
+
+				function isolateToShadow(templateElement, wrapWithBody = false) {
+					var host = document.createElement('div');
+					host.style.all = 'initial';
+					templateElement.before(host);
+					var shadow = host.attachShadow({'mode': 'open'});
+
+					if (wrapWithBody) {
+						var html = document.createElement('html');
+						var body = document.createElement('body');
+						html.append(body);
+						body.append(templateElement.content.cloneNode(true));
+						shadow.append(html);
+					} else {
+						shadow.append(templateElement.content.cloneNode(true));
+					}
+
+					return shadow;
+				}
+
+				function prismHighlight(target) {
+					if (window.Prism) {
+						window.Prism.highlightAllUnder(target)
+					}
+				}
+
+				function reloadCurrentForm(root, options = {}) {
+					var params = {
+						formId: getSelectedFormId(root),
+						templateName: getSelectedTemplateName(root),
+						options: options,
+					};
+
+					var tracyRefreshOld = window.TracyAutoRefresh;
+					window.TracyAutoRefresh = false;
+
+					window.fetch(window.location.href, {headers: {'X-Daku-Nette-Form-Blueprints-Ajax': JSON.stringify(params)}}).then(function (response) {
+						return response.text();
+
+					}).then(function (text) {
+						var lines = text.split('\n');
+						var data = JSON.parse(lines[lines.length - 1]);
+
+						if (data['error']) {
+							console.log('Ajax error:', data['error']);
+
+						} else {
+							root.querySelector('.template-options').innerHTML = data['templateOptions'];
+							root.querySelector('.html-editor-link').setAttribute('href', data['blueprintFileEditorUri']);
+							root.querySelector('.detail-latte pre code').textContent = data['latte'];
+							root.querySelector('.detail-preview div').shadowRoot.querySelector('body').innerHTML = data['preview'];
+							root.querySelector('.preview-unavailable-text').hidden = data['preview'] !== null;
+							root.querySelector('.detail-css pre code').textContent = data['styles'];
+							addListenersForOptions(root);
+							prismHighlight(root);
+						}
+					});
+
+					window.TracyAutoRefresh = tracyRefreshOld;
+				}
+
+				function updateAutoResizable(root, panel) {
+					var panelRect = panel.getBoundingClientRect();
+					root.querySelectorAll('.auto-resizable').forEach(function (el) {
+						var rect = el.getBoundingClientRect();
+						el.style.maxWidth = (panelRect.width - (rect.left - panelRect.left) - 15) + 'px';
+						el.style.maxHeight = (panelRect.height - (rect.top - panelRect.top) - 35) + 'px';
+					});
+				}
+
+				function addListenersForOptions(root) {
+					root.querySelectorAll('.input-option').forEach(function (el) {
+						el.addEventListener('change', function (e) {
+							var value = el.type == 'checkbox' ? el.checked : el.value;
+							reloadCurrentForm(shadow, {[el.name]: value});
+						});
+					});
+				}
+
+				var panel = document.querySelector('#tracy-debug-panel-Daku-Nette-FormBlueprints-BlueprintsPanel');
+
+				// put contents of <template> elements to shadow element (for isolated styles)
+				var shadow = isolateToShadow(panel.querySelector('template'));
+				var previewTemplate = shadow.querySelector('.detail-preview template');
+				if (previewTemplate) {
+					isolateToShadow(previewTemplate, true);
+				}
+
+				// form switching
+				shadow.querySelectorAll('.form-link').forEach(function (el) {
+					el.addEventListener('click', function (e) {
+						el.closest('.form-link-list').querySelectorAll('.form-link').forEach(el => el.classList.remove('form-link-selected'));
+						el.classList.add('form-link-selected');
+						reloadCurrentForm(shadow);
+					});
+				});
+
+				// template switching
+				shadow.querySelector('.template-select').addEventListener('change', (function (e) {
+					return reloadCurrentForm(shadow);
+				}));
+
+				// template options changing
+				addListenersForOptions(shadow);
+
+				// tab detail switching
+				shadow.querySelectorAll('.tab').forEach(function (el) {
+					el.addEventListener('click', function (e) {
+						el.closest('.tab-row').querySelectorAll('.tab').forEach(el => el.classList.remove('tab-selected'));
+						el.classList.add('tab-selected');
+						shadow.querySelectorAll(el.dataset.targetHide).forEach(el => el.hidden = true);
+						shadow.querySelectorAll(el.dataset.targetShow).forEach(el => el.hidden = false);
+						window.localStorage.setItem('form-blueprints-last-tab-name', el.dataset.tabName);
+						updateAutoResizable(shadow, panel);
+					});
+				});
+
+				// copy to clipboard buttons
+				shadow.querySelectorAll('.detail .copyButton a').forEach(function (el) {
+					el.addEventListener('click', function (e) {
+						e.preventDefault();
+						if (copyToClipboard(el.closest('.detail').querySelector('pre'))) {
+							el.closest('.detail').querySelector('.tooltip').hidden = false;
+							window.setTimeout(() => el.closest('.detail').querySelector('.tooltip').hidden = true, 650);
+						}
+					});
+				});
+
+				// show last tab
+				var lastTabName = window.localStorage.getItem('form-blueprints-last-tab-name') || 'latte';
+				shadow.querySelector('.tab[data-tab-name=' + lastTabName).classList.add('tab-selected');
+				shadow.querySelector('.detail-' + lastTabName).hidden = false;
+
+				// auto resize according to panel
+				new ResizeObserver(function (entries) {
+					for (var entry of entries) {
+						var rect = entry.target.getBoundingClientRect();
+						updateAutoResizable(shadow, panel);
+					}
+				}).observe(panel);
+
+				// syntax highlighting using Prism
+				var script = document.createElement('script');
+				script.src = 'https://cdn.jsdelivr.net/combine/npm/prismjs@1.19.0,npm/prismjs@1.19.0/components/prism-markup-templating.min.js,npm/prismjs@1.19.0/components/prism-php.min.js,npm/prismjs@1.19.0/components/prism-latte.min.js';
+				script.dataset.manual = '';
+				script.onload = () => prismHighlight(shadow);
+				shadow.append(script);
+			})();
+		</script>
+		<style class="tracy-debug">
+			div#tracy-debug #tracy-debug-panel-Daku-Nette-FormBlueprints-BlueprintsPanel {width: 800px;height: 550px;max-width: initial;max-height: initial;}
+			body#tracy-debug #tracy-debug-panel-Daku-Nette-FormBlueprints-BlueprintsPanel {height: 100vh;}
+		</style>
+	<?php else: ?>
+		<p>No forms added to the panel.</p>
+	<?php endif; ?>
+</div>
