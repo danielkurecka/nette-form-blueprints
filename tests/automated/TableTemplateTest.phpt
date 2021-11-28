@@ -85,10 +85,10 @@ class TableTemplateTest extends TestCase
 	public function testCreateButtons()
 	{
 		$actual = $this->template()->createButtons((new Button)->setParent(null, 'foo'))->render();
-		Assert::same('<tr><th></th><td><input n:name="foo" value="foo"></td></tr>', $actual);
+		Assert::same('<tr><th></th><td>{*select:foo*}<input n:name="foo" value="foo">{*/select*}</td></tr>', $actual);
 
 		$actual = $this->template()->createButtons((new Button)->setParent(null, 'foo'), (new Button)->setParent(null, 'bar'))->render();
-		Assert::same('<tr><th></th><td><input n:name="foo" value="foo"> <input n:name="bar" value="bar"></td></tr>', $actual);
+		Assert::same('<tr><th></th><td>{*select:foo*}<input n:name="foo" value="foo">{*/select*} {*select:bar*}<input n:name="bar" value="bar">{*/select*}</td></tr>', $actual);
 	}
 
 }

@@ -36,9 +36,7 @@ use Tracy\Helpers;
 				.option-check label {user-select: none;}
 				.option-check label[title] {text-decoration: underline #aeaeae; text-decoration-style: dotted;}
 				.option {margin-bottom: 5px;}
-				.copyButton {display: inline-block;position: relative;}
-				.tooltip {color: #fff;background-color: #333;border-radius: 6px;padding: 3px 8px;position: absolute;z-index: 1;top: -5px;right: 110%;}
-				.tooltip::after {content: '';position: absolute;top: 50%;left: 100%;margin-top: -5px;border: 5px solid;border-color: transparent transparent transparent #333;}
+				.tooltip-copied {color: #fff;background-color: #333;border-radius: 6px;padding: 3px 8px;}
 				.render-location {margin-top: 5px;}
 				/* styles for Prism syntax highlighting */
 				pre {border-radius: 5px; border: 1px dotted silver; background: #f1f7ff;box-shadow: inset 1px 1px 10px #e9f1fd;padding: 10px;}
@@ -103,22 +101,27 @@ use Tracy\Helpers;
 							Preview
 						</div>
 					</div>
-					<?php list($file, $html, $preview) = $this->prepareBlueprint($this->getCurrentForm(), $this->getCurrentTemplate()) ?>
+					<?php [$file, $latteEscaped, $preview, $selectRangeListHtml] = $this->prepareBlueprint($this->getCurrentForm(), $this->getCurrentTemplate()) ?>
 					<div class="detail detail-latte" hidden>
 						<p>
-							<span class="copyButton"><span class="tooltip" hidden>Copied</span> <a href="#">Copy to clipboard</a></span> |
+							<a href="#" class="copy-button">Copy to clipboard</a> |
 							<a href="<?= Helpers::editorUri($file) ?>" class="html-editor-link" title="<?= $file ?>">Open in editor</a>
+							<span class="tooltip-copied" hidden>Copied</span><br>
+							Copy individual: <span class="select-range-list"><?= $selectRangeListHtml ?></span>
 						</p>
-						<pre class="auto-resizable"><code class="language-latte"><?= htmlspecialchars($html) ?></code></pre>
+						<pre class="auto-resizable"><code class="language-latte"><?= $latteEscaped ?></code></pre>
 					</div>
-						<div class="detail detail-preview auto-resizable" hidden>
-							<p class="preview-unavailable-text" <?= $this->getCurrentForm()->isAnchored() ? ' hidden' : '' ?>>
-								Preview is not available, form was not attached to a presener.
-							</p>
-							<template><?= $preview ?></template>
-						</div>
+					<div class="detail detail-preview auto-resizable" hidden>
+						<p class="preview-unavailable-text" <?= $this->getCurrentForm()->isAnchored() ? ' hidden' : '' ?>>
+							Preview is not available, form was not attached to a presener.
+						</p>
+						<template><?= $preview ?></template>
+					</div>
 					<div class="detail detail-css" hidden>
-						<p><span class="copyButton"><span class="tooltip" hidden>Copied</span> <a href="#">Copy to clipboard</a></span></p>
+						<p>
+							<a href="#" class="copy-button">Copy to clipboard</a>
+							<span class="tooltip-copied" hidden>Copied</span>
+						</p>
 						<pre class="auto-resizable"><code class="language-latte"><?= htmlspecialchars($this->getCurrentTemplate()->getStyles()) ?></code></pre>
 					</div>
 				</main>
@@ -141,11 +144,11 @@ use Tracy\Helpers;
 					return select.options[select.selectedIndex].text;
 				}
 
-				function copyToClipboard(element) {
+				function copyToClipboard(root, element) {
 					var textArea = document.createElement('textarea');
 					textArea.style.position = 'fixed';
 					textArea.value = element.textContent;
-					document.body.appendChild(textArea);
+					root.appendChild(textArea);
 					textArea.select();
 					var result = true;
 					try {
@@ -153,7 +156,16 @@ use Tracy\Helpers;
 					} catch (err) {
 						result = false;
 					}
-					document.body.removeChild(textArea);
+					root.removeChild(textArea);
+
+					if (result) {
+						Array.from(shadow.querySelectorAll('.tooltip-copied')).forEach(function (tooltip) {
+							tooltip.hidden = false;
+							window.setTimeout(function () {
+								tooltip.hidden = true;
+							}, 650);
+						});
+					}
 					return result;
 				}
 
@@ -205,12 +217,14 @@ use Tracy\Helpers;
 						} else {
 							root.querySelector('.template-options').innerHTML = data['templateOptions'];
 							root.querySelector('.html-editor-link').setAttribute('href', data['blueprintFileEditorUri']);
-							root.querySelector('.detail-latte pre code').textContent = data['latte'];
+							root.querySelector('.detail-latte pre code').innerHTML = data['latte'];
+							root.querySelector('.select-range-list').innerHTML = data['selectRangeListHtml'];
 							root.querySelector('.detail-preview div').shadowRoot.querySelector('body').innerHTML = data['preview'];
 							root.querySelector('.preview-unavailable-text').hidden = data['preview'] !== null;
 							root.querySelector('.detail-css pre code').textContent = data['styles'];
-							addListenersForOptions(root);
+							addCommonListeners(root);
 							prismHighlight(root);
+							updateAutoResizable(root, panel);
 						}
 					});
 
@@ -219,19 +233,42 @@ use Tracy\Helpers;
 
 				function updateAutoResizable(root, panel) {
 					var panelRect = panel.getBoundingClientRect();
-					root.querySelectorAll('.auto-resizable').forEach(function (el) {
-						var rect = el.getBoundingClientRect();
-						el.style.maxWidth = (panelRect.width - (rect.left - panelRect.left) - 15) + 'px';
-						el.style.maxHeight = (panelRect.height - (rect.top - panelRect.top) - 35) + 'px';
+					requestAnimationFrame(function () {
+						root.querySelectorAll('.auto-resizable').forEach(function (el) {
+							if (el.offsetParent) {
+								var rect = el.getBoundingClientRect();
+								el.style.maxWidth = (panelRect.width - (rect.left - panelRect.left) - 15) + 'px';
+								el.style.maxHeight = (panelRect.height - (rect.top - panelRect.top) - 35) + 'px';
+							}
+						});
 					});
 				}
 
-				function addListenersForOptions(root) {
+				function addCommonListeners(root) {
+					// template options changing
 					root.querySelectorAll('.input-option').forEach(function (el) {
 						el.addEventListener('change', function (e) {
 							var value = el.type == 'checkbox' ? el.checked : el.value;
 							reloadCurrentForm(shadow, {[el.name]: value});
 						});
+					});
+
+					// copy to clipboard buttons
+					shadow.querySelectorAll('.copy-button').forEach(function (el) {
+						el.addEventListener('click', function (e) {
+							e.preventDefault();
+							copyToClipboard(shadow, el.closest('.detail').querySelector('pre'));
+						});
+					});
+
+					// copy individual items
+					root.querySelector('.select-range-list').addEventListener('click', function (e) {
+						var target = e.target;
+						if (target.nodeName === 'A') {
+							var rangeElement = root.querySelectorAll('.select-range').item(target.getAttribute('data-index'));
+							copyToClipboard(root, rangeElement)
+							e.preventDefault();
+						}
 					});
 				}
 
@@ -254,12 +291,9 @@ use Tracy\Helpers;
 				});
 
 				// template switching
-				shadow.querySelector('.template-select').addEventListener('change', (function (e) {
-					return reloadCurrentForm(shadow);
-				}));
+				shadow.querySelector('.template-select').addEventListener('change', (e) => reloadCurrentForm(shadow));
 
-				// template options changing
-				addListenersForOptions(shadow);
+				addCommonListeners(shadow);
 
 				// tab detail switching
 				shadow.querySelectorAll('.tab').forEach(function (el) {
@@ -273,33 +307,17 @@ use Tracy\Helpers;
 					});
 				});
 
-				// copy to clipboard buttons
-				shadow.querySelectorAll('.detail .copyButton a').forEach(function (el) {
-					el.addEventListener('click', function (e) {
-						e.preventDefault();
-						if (copyToClipboard(el.closest('.detail').querySelector('pre'))) {
-							el.closest('.detail').querySelector('.tooltip').hidden = false;
-							window.setTimeout(() => el.closest('.detail').querySelector('.tooltip').hidden = true, 650);
-						}
-					});
-				});
-
 				// show last tab
 				var lastTabName = window.localStorage.getItem('form-blueprints-last-tab-name') || 'latte';
 				shadow.querySelector('.tab[data-tab-name=' + lastTabName).classList.add('tab-selected');
 				shadow.querySelector('.detail-' + lastTabName).hidden = false;
 
 				// auto resize according to panel
-				new ResizeObserver(function (entries) {
-					for (var entry of entries) {
-						var rect = entry.target.getBoundingClientRect();
-						updateAutoResizable(shadow, panel);
-					}
-				}).observe(panel);
+				new ResizeObserver(() => updateAutoResizable(shadow, panel)).observe(panel);
 
 				// syntax highlighting using Prism
 				var script = document.createElement('script');
-				script.src = 'https://cdn.jsdelivr.net/combine/npm/prismjs@1.19.0,npm/prismjs@1.19.0/components/prism-markup-templating.min.js,npm/prismjs@1.19.0/components/prism-php.min.js,npm/prismjs@1.19.0/components/prism-latte.min.js';
+				script.src = 'https://cdn.jsdelivr.net/combine/npm/prismjs@1.19.0,npm/prismjs@1.19.0/components/prism-markup-templating.min.js,npm/prismjs@1.19.0/components/prism-php.min.js,npm/prismjs@1.19.0/components/prism-latte.min.js,npm/prismjs@1.19.0/plugins/keep-markup/prism-keep-markup.min.js';
 				script.dataset.manual = '';
 				script.onload = () => prismHighlight(shadow);
 				shadow.append(script);

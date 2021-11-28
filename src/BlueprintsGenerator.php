@@ -67,14 +67,6 @@ class BlueprintsGenerator
 	}
 
 
-	public function generateToFile(string $fileName, Form $formControl, Template $template): string
-	{
-		$output = $this->generate($formControl, $template);
-		FileSystem::write($fileName, $output);
-		return $output;
-	}
-
-
 	private function generateControls(array $controls, Template $template): string
 	{
 		$toProcess = array_filter($controls, function ($control) {
@@ -89,39 +81,40 @@ class BlueprintsGenerator
 		$return = '';
 		foreach ($this->groupButtonsToArrayObject($toProcess) as $control) {
 			if ($control instanceof Container) {
-				$return .= '{formContainer ' . $control->getName() . '}';
-				$return .= $this->generateControls($control->getControls()->getArrayCopy(), $template);
-				$return .= '{/formContainer}';
+				$container = '{formContainer ' . $control->getName() . '}';
+				$container .= $this->generateControls($control->getControls()->getArrayCopy(), $template);
+				$container .= '{/formContainer}';
+				$return .= SelectMarkerHelpers::wrapWithMarker($container, $control->getName());
 
 			} elseif ($control instanceof \ArrayObject) {
-				$return .= $template->createButtons(...$control);
+				$return .= SelectMarkerHelpers::wrapWithMarker((string) $template->createButtons(...$control), 'button-group');
 
 			} elseif ($control instanceof TextInput) {
-				$return .= $template->createText($control);
+				$return .= SelectMarkerHelpers::wrapWithMarker((string) $template->createText($control), $control->getName());
 
 			} elseif ($control instanceof UploadControl) {
-				$return .= $template->createUpload($control);
+				$return .= SelectMarkerHelpers::wrapWithMarker((string) $template->createUpload($control), $control->getName());
 
 			} elseif ($control instanceof TextArea) {
-				$return .= $template->createTextArea($control);
+				$return .= SelectMarkerHelpers::wrapWithMarker((string) $template->createTextArea($control), $control->getName());
 
 			} elseif ($control instanceof SelectBox) {
-				$return .= $template->createSelectBox($control);
+				$return .= SelectMarkerHelpers::wrapWithMarker((string) $template->createSelectBox($control), $control->getName());
 
 			} elseif ($control instanceof MultiSelectBox) {
-				$return .= $template->createMultiSelectBox($control);
+				$return .= SelectMarkerHelpers::wrapWithMarker((string) $template->createMultiSelectBox($control), $control->getName());
 
 			} elseif ($control instanceof RadioList) {
-				$return .= $template->createRadioList($control);
+				$return .= SelectMarkerHelpers::wrapWithMarker((string) $template->createRadioList($control), $control->getName());
 
 			} elseif ($control instanceof Checkbox) {
-				$return .= $template->createCheckbox($control);
+				$return .= SelectMarkerHelpers::wrapWithMarker((string) $template->createCheckbox($control), $control->getName());
 
 			} elseif ($control instanceof CheckboxList) {
-				$return .= $template->createCheckboxList($control);
+				$return .= SelectMarkerHelpers::wrapWithMarker((string) $template->createCheckboxList($control), $control->getName());
 
 			} elseif ($control instanceof BaseControl && !$control instanceof HiddenField) {
-				$return .= $template->createOther($control);
+				$return .= SelectMarkerHelpers::wrapWithMarker((string) $template->createOther($control), $control->getName());
 			}
 		}
 

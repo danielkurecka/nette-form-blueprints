@@ -13,6 +13,7 @@ use Nette\Application\UI\Presenter;
 use Nette\Bridges\ApplicationLatte\ILatteFactory;
 use Nette\Bridges\ApplicationLatte\Template as LatteTemplate;
 use Nette\Bridges\FormsLatte\FormMacros;
+use Nette\Utils\Arrays;
 use Nette\Utils\FileSystem;
 use Nette\Utils\Html;
 use Nette\Utils\Json;
@@ -110,11 +111,12 @@ class BlueprintsPanel implements IBarPanel
 			$this->session['lastTemplateName'] = $params['templateName'];
 			$this->session['lastFormId'] = $params['formId'];
 			$this->session['lastOptions'] = $template->getOptions() + ($this->session['lastOptions'] ?? []);
-			list($blueprintFile, $latte, $preview) = $this->prepareBlueprint($form, $template);
+			[$blueprintFile, $latte, $preview, $selectRangeListHtml] = $this->prepareBlueprint($form, $template);
 			$response = [
 				'templateOptions' => (string) $this->createTemplateOptions($template),
 				'blueprintFileEditorUri' => Helpers::editorUri($blueprintFile),
 				'latte' => $latte,
+				'selectRangeListHtml' => $selectRangeListHtml,
 				'preview' => $preview,
 				'styles' => $template->getStyles(),
 			];
@@ -130,8 +132,13 @@ class BlueprintsPanel implements IBarPanel
 
 	private function prepareBlueprint(Form $form, Template $template): array
 	{
+		$latte = $this->generator->generate($form, $template);
 		$file = $this->tempDir . '/' . $this->getFormId($form) . '-' . preg_replace('~[^a-z0-9]+~i', '-', $template->getName()) . '.latte';
-		$latte = $this->generator->generateToFile($file, $form, $template);
+		FileSystem::write($file, SelectMarkerHelpers::removeMarkers($latte));
+		$selectRangeListHtml = implode(' | ', Arrays::map(SelectMarkerHelpers::getMarkerNames($latte), fn($name, $i) => (Html::el('a', ['href' => '#', 'data-index' => $i])->setText($name))));
+
+		$latte = htmlspecialchars($latte);
+		$latte = SelectMarkerHelpers::replaceMarkers($latte, '<span class="select-range" data-name="$1">', '</span>');
 
 		if ($this->showPreview) {
 			$preview = $form->isAnchored() ? $template->getStyles() . $template->createPreviewWrap()->setHtml($this->renderLatteFileToString($form, $file)) : null;
@@ -139,7 +146,7 @@ class BlueprintsPanel implements IBarPanel
 			$preview = '';
 		}
 
-		return [realpath($file), $latte, $preview];
+		return [realpath($file), $latte, $preview, $selectRangeListHtml];
 	}
 
 
@@ -213,14 +220,14 @@ class BlueprintsPanel implements IBarPanel
 	private function getCurrentForm(): Form
 	{
 		$form = isset($this->session['lastFormId']) ? $this->findForm($this->session['lastFormId'], false) : null;
-		return $form ? $form : $this->forms[0];
+		return $form ?: $this->forms[0];
 	}
 
 
 	private function getCurrentTemplate(): Template
 	{
 		$template = isset($this->session['lastTemplateName']) ? $this->findTemplate($this->session['lastTemplateName'], false) : null;
-		return $template ? $template : $this->templates[0];
+		return $template ?: $this->templates[0];
 	}
 
 
