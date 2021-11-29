@@ -21,7 +21,6 @@ From now on you will be able to see generated blueprints in debug panel for all 
 ```neon
 formBlueprints:
 	indentation: '    ' # change indentation to spaces
-	preview: false # don't render preview
 
 	# add custom templates
 	templates:

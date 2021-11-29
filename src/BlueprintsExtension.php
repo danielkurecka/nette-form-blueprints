@@ -24,7 +24,6 @@ class BlueprintsExtension extends CompilerExtension
 
 	private $defaults = [
 		'indentation' => "\t",
-		'showPreview' => true,
 		'templates' => [
 			TableTemplate::class,
 			LineBreaksTemplate::class,
@@ -78,7 +77,6 @@ class BlueprintsExtension extends CompilerExtension
 		$panelDefinition = $builder->addDefinition($this->prefix('panel'))
 			->setFactory(BlueprintsPanel::class, [
 				$builder->parameters['tempDir'] . '/form-blueprints',
-				$this->config['showPreview'],
 				$this->config['templates']
 			]);
 

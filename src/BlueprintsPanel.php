@@ -25,8 +25,6 @@ class BlueprintsPanel implements IBarPanel
 
 	private $tempDir;
 
-	private $showPreview;
-
 	/** @var Template[] */
 	private $templates;
 
@@ -46,10 +44,9 @@ class BlueprintsPanel implements IBarPanel
 	/**
 	 * @param Template[] $templates
 	 */
-	public function __construct(string $tempDir, bool $showPreview, array $templates, BlueprintsGenerator $generator, ILatteFactory $latteFactory)
+	public function __construct(string $tempDir, array $templates, BlueprintsGenerator $generator, ILatteFactory $latteFactory)
 	{
 		$this->tempDir = $tempDir;
-		$this->showPreview = $showPreview;
 		$this->templates = $templates;
 		$this->generator = $generator;
 		$this->latteFactory = $latteFactory;
@@ -111,7 +108,7 @@ class BlueprintsPanel implements IBarPanel
 			$this->session['lastTemplateName'] = $params['templateName'];
 			$this->session['lastFormId'] = $params['formId'];
 			$this->session['lastOptions'] = $template->getOptions() + ($this->session['lastOptions'] ?? []);
-			[$blueprintFile, $latte, $preview, $selectRangeListHtml] = $this->prepareBlueprint($form, $template);
+			[$blueprintFile, $latte, $preview, $selectRangeListHtml] = $this->prepareBlueprint($form, $template, $params['renderPreview']);
 			$response = [
 				'templateOptions' => (string) $this->createTemplateOptions($template),
 				'blueprintFileEditorUri' => Helpers::editorUri($blueprintFile),
@@ -130,22 +127,15 @@ class BlueprintsPanel implements IBarPanel
 	}
 
 
-	private function prepareBlueprint(Form $form, Template $template): array
+	private function prepareBlueprint(Form $form, Template $template, bool $renderPreview = false): array
 	{
 		$latte = $this->generator->generate($form, $template);
 		$file = $this->tempDir . '/' . $this->getFormId($form) . '-' . preg_replace('~[^a-z0-9]+~i', '-', $template->getName()) . '.latte';
 		FileSystem::write($file, SelectMarkerHelpers::removeMarkers($latte));
 		$selectRangeListHtml = implode(' | ', Arrays::map(SelectMarkerHelpers::getMarkerNames($latte), fn($name, $i) => (Html::el('a', ['href' => '#', 'data-index' => $i])->setText($name))));
-
 		$latte = htmlspecialchars($latte);
 		$latte = SelectMarkerHelpers::replaceMarkers($latte, '<span class="select-range" data-name="$1">', '</span>');
-
-		if ($this->showPreview) {
-			$preview = $form->isAnchored() ? $template->getStyles() . $template->createPreviewWrap()->setHtml($this->renderLatteFileToString($form, $file)) : null;
-		} else {
-			$preview = '';
-		}
-
+		$preview = $renderPreview ? $this->createPreview($file, $form, $template) : null;
 		return [realpath($file), $latte, $preview, $selectRangeListHtml];
 	}
 
@@ -168,6 +158,13 @@ class BlueprintsPanel implements IBarPanel
 		$latteTempalte = new LatteTemplate($latte);
 		$latteTempalte->setFile($latteFile);
 		return (string) $latteTempalte;
+	}
+
+
+	private function createPreview(string $latteFile, Form $form, Template $template): string
+	{
+		return $form->isAnchored() ? $template->getStyles() . $template->createPreviewWrap()->setHtml($this->renderLatteFileToString($form, $latteFile))
+			: '<p>Preview is not available, form was not attached to a presener.</p>';
 	}
 
 

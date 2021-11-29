@@ -9,7 +9,6 @@ extensions:
 	formBlueprints: Daku\Nette\FormBlueprints\BlueprintsExtension
 
 formBlueprints:
-#	showPreview: false
 #	indentation: '  '
 #	templates:
 #		- Daku\Nette\FormBlueprints\Templates\TableTemplate

@@ -89,7 +89,6 @@ use Tracy\Helpers;
 					</div>
 				</aside>
 				<main>
-					<?php ?>
 					<div class="tab-row">
 						<div class="tab" data-tab-name="latte" data-target-hide=".detail" data-target-show=".detail-latte">
 							Latte
@@ -97,7 +96,7 @@ use Tracy\Helpers;
 						<div class="tab" data-tab-name="css" data-target-hide=".detail" data-target-show=".detail-css">
 							CSS
 						</div>
-						<div class="tab" data-tab-name="preview" data-target-hide=".detail" data-target-show=".detail-preview"<?= !$this->showPreview ? ' hidden' : '' ?>>
+						<div class="tab" data-tab-name="preview" data-target-hide=".detail" data-target-show=".detail-preview">
 							Preview
 						</div>
 					</div>
@@ -112,9 +111,6 @@ use Tracy\Helpers;
 						<pre class="auto-resizable"><code class="language-latte"><?= $latteEscaped ?></code></pre>
 					</div>
 					<div class="detail detail-preview auto-resizable" hidden>
-						<p class="preview-unavailable-text" <?= $this->getCurrentForm()->isAnchored() ? ' hidden' : '' ?>>
-							Preview is not available, form was not attached to a presener.
-						</p>
 						<template><?= $preview ?></template>
 					</div>
 					<div class="detail detail-css" hidden>
@@ -194,11 +190,12 @@ use Tracy\Helpers;
 					}
 				}
 
-				function reloadCurrentForm(root, options = {}) {
+				function reloadCurrentForm(root, templateOptions = {}) {
 					var params = {
 						formId: getSelectedFormId(root),
 						templateName: getSelectedTemplateName(root),
-						options: options,
+						options: templateOptions,
+						renderPreview: root.querySelector('.tab-selected').dataset.tabName === 'preview',
 					};
 
 					var tracyRefreshOld = window.TracyAutoRefresh;
@@ -220,7 +217,6 @@ use Tracy\Helpers;
 							root.querySelector('.detail-latte pre code').innerHTML = data['latte'];
 							root.querySelector('.select-range-list').innerHTML = data['selectRangeListHtml'];
 							root.querySelector('.detail-preview div').shadowRoot.querySelector('body').innerHTML = data['preview'];
-							root.querySelector('.preview-unavailable-text').hidden = data['preview'] !== null;
 							root.querySelector('.detail-css pre code').textContent = data['styles'];
 							addCommonListeners(root);
 							prismHighlight(root);
@@ -276,10 +272,7 @@ use Tracy\Helpers;
 
 				// put contents of <template> elements to shadow element (for isolated styles)
 				var shadow = isolateToShadow(panel.querySelector('template'));
-				var previewTemplate = shadow.querySelector('.detail-preview template');
-				if (previewTemplate) {
-					isolateToShadow(previewTemplate, true);
-				}
+				isolateToShadow(shadow.querySelector('.detail-preview template'), true);
 
 				// form switching
 				shadow.querySelectorAll('.form-link').forEach(function (el) {
@@ -303,6 +296,9 @@ use Tracy\Helpers;
 						shadow.querySelectorAll(el.dataset.targetHide).forEach(el => el.hidden = true);
 						shadow.querySelectorAll(el.dataset.targetShow).forEach(el => el.hidden = false);
 						window.localStorage.setItem('form-blueprints-last-tab-name', el.dataset.tabName);
+						if (el.dataset.tabName === 'preview') {
+							reloadCurrentForm(shadow);
+						}
 						updateAutoResizable(shadow, panel);
 					});
 				});
@@ -311,6 +307,9 @@ use Tracy\Helpers;
 				var lastTabName = window.localStorage.getItem('form-blueprints-last-tab-name') || 'latte';
 				shadow.querySelector('.tab[data-tab-name=' + lastTabName).classList.add('tab-selected');
 				shadow.querySelector('.detail-' + lastTabName).hidden = false;
+				if (lastTabName === 'preview') {
+					reloadCurrentForm(shadow);
+				}
 
 				// auto resize according to panel
 				new ResizeObserver(() => updateAutoResizable(shadow, panel)).observe(panel);
