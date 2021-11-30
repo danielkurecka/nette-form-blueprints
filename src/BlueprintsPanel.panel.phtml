@@ -204,6 +204,9 @@ use Tracy\Helpers;
 
 					var tracyRefreshOld = window.TracyAutoRefresh;
 					window.TracyAutoRefresh = false;
+					if (window.Tracy.Debug && window.Tracy.Debug.setOptions) {
+						window.Tracy.Debug.setOptions({autoRefresh: false})
+					}
 
 					var spinner = root.querySelector('.spinner');
 					spinner.hidden = false;
@@ -232,6 +235,9 @@ use Tracy\Helpers;
 					});
 
 					window.TracyAutoRefresh = tracyRefreshOld;
+					if (window.Tracy.Debug && window.Tracy.Debug.setOptions) {
+						window.Tracy.Debug.setOptions({autoRefresh: tracyRefreshOld})
+					}
 				}
 
 				function updateAutoResizable(root, panel) {
