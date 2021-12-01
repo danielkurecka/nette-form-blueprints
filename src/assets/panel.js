@@ -73,7 +73,7 @@ function reloadCurrentForm(root, templateOptions = {}) {
 
 	var tracyRefreshOld = window.TracyAutoRefresh;
 	window.TracyAutoRefresh = false;
-	if (window.Tracy.Debug && window.Tracy.Debug.setOptions) {
+	if (window.Tracy && window.Tracy.Debug && window.Tracy.Debug.setOptions) {
 		window.Tracy.Debug.setOptions({autoRefresh: false})
 	}
 
@@ -104,7 +104,7 @@ function reloadCurrentForm(root, templateOptions = {}) {
 	});
 
 	window.TracyAutoRefresh = tracyRefreshOld;
-	if (window.Tracy.Debug && window.Tracy.Debug.setOptions) {
+	if (window.Tracy && window.Tracy.Debug && window.Tracy.Debug.setOptions) {
 		window.Tracy.Debug.setOptions({autoRefresh: tracyRefreshOld})
 	}
 }
