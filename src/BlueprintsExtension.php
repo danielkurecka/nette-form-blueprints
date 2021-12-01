@@ -16,7 +16,8 @@ use Daku\Nette\FormBlueprints\Templates\Template;
 use Latte\Parser;
 use Nette\Application\Application;
 use Nette\DI\CompilerExtension;
-use Nette\DI\Statement;
+use Nette\DI\Definitions\ServiceDefinition;
+use Nette\DI\Definitions\Statement;
 use Nette\PhpGenerator\ClassType;
 
 class BlueprintsExtension extends CompilerExtension
@@ -81,8 +82,9 @@ class BlueprintsExtension extends CompilerExtension
 			]);
 
 		if ($builder->parameters['debugMode'] && $appName = $builder->getByType(Application::class)) {
-			$builder->getDefinition($appName)
-				->addSetup('$onShutdown[]', [[$panelDefinition, 'addFormsFromApplication']]);
+			/** @var ServiceDefinition $definition */
+			$definition = $builder->getDefinition($appName);
+			$definition->addSetup('$onShutdown[]', [[$panelDefinition, 'addFormsFromApplication']]);
 		}
 	}
 
