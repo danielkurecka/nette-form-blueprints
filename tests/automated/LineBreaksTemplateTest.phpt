@@ -20,7 +20,7 @@ class LineBreaksTemplateTest extends TestCase
 
 	protected function template(array $options = []): LineBreaksTemplate
 	{
-		return new LineBreaksTemplate($options);
+		return new LineBreaksTemplate($options + ['inputDescriptions' => true, 'inputErrros' => true]);
 	}
 
 

@@ -24,7 +24,7 @@ class Bootstrap3HorizontalTemplateTest extends TestCase
 
 	protected function template(array $options = []): Bootstrap3HorizontalTemplate
 	{
-		return new Bootstrap3HorizontalTemplate($options);
+		return new Bootstrap3HorizontalTemplate($options + ['inputDescriptions' => true, 'inputErrros' => true]);
 	}
 
 

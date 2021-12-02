@@ -24,7 +24,7 @@ class Bootstrap4TemplateTest extends TestCase
 
 	protected function template(array $options = []): Bootstrap4Template
 	{
-		return new Bootstrap4Template($options);
+		return new Bootstrap4Template($options + ['customForms' => true, 'inputDescriptions' => true, 'inputErrros' => true]);
 	}
 
 

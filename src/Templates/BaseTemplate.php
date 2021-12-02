@@ -31,8 +31,8 @@ abstract class BaseTemplate implements Template
 	{
 		return [
 			'novalidate' => new OptionDefinition('Add novalidate attribute', 'Disables Nette/browser client side validation', OptionDefinition::TYPE_CHECKBOX, [true, false], true),
-			'inputErrros' => new OptionDefinition('Add individual input errors', '', OptionDefinition::TYPE_CHECKBOX, [true, false], true),
-			'inputDescriptions' => new OptionDefinition('Add input descriptions', '', OptionDefinition::TYPE_CHECKBOX, [true, false], true),
+			'inputErrros' => new OptionDefinition('Add individual input errors', '', OptionDefinition::TYPE_CHECKBOX, [true, false], false),
+			'inputDescriptions' => new OptionDefinition('Add input descriptions', '', OptionDefinition::TYPE_CHECKBOX, [true, false], false),
 		];
 	}
 

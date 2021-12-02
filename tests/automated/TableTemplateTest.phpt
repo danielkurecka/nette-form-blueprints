@@ -20,7 +20,7 @@ class TableTemplateTest extends TestCase
 
 	protected function template(array $options = []): TableTemplate
 	{
-		return new TableTemplate($options);
+		return new TableTemplate($options + ['highlightRequired' => true, 'inputDescriptions' => true, 'inputErrros' => true]);
 	}
 
 

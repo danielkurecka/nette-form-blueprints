@@ -23,7 +23,7 @@ class BaseTemplateTest extends TestCase
 
 	protected function template(array $options = []): BaseTemplate
 	{
-		return new class($options) extends BaseTemplate {
+		return new class($options + ['inputDescriptions' => true, 'inputErrros' => true]) extends BaseTemplate {
 			public function getName(): string{ }
 			public function createText(BaseControl $control): Html { }
 			public function createTextArea(TextArea $textArea): Html { }

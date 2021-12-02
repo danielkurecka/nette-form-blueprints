@@ -23,7 +23,7 @@ class Bootstrap4HorizontalTemplateTest extends TestCase
 
 	protected function template(array $options = []): Bootstrap4HorizontalTemplate
 	{
-		return new Bootstrap4HorizontalTemplate($options);
+		return new Bootstrap4HorizontalTemplate($options + ['customForms' => true, 'inputDescriptions' => true, 'inputErrros' => true]);
 	}
 
 

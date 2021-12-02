@@ -24,7 +24,7 @@ class Bootstrap3TemplateTest extends TestCase
 
 	protected function template(array $options = []): Bootstrap3Template
 	{
-		return new Bootstrap3Template($options);
+		return new Bootstrap3Template($options + ['inputDescriptions' => true, 'inputErrros' => true]);
 	}
 
 
