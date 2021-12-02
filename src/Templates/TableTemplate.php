@@ -96,10 +96,32 @@ class TableTemplate extends BaseTemplate
 	{
 		return <<<'HTML'
 <style>
-	form th, form td { vertical-align: top; font-weight: normal; }
-	form th { text-align: right; }
-	form .required label { font-weight: bold; }
-	form .error { color: #d00; font-weight: bold; }
+	form th, form td {
+		vertical-align: top;
+		padding: .3em .5em;
+		
+	}
+	
+	form th {
+		text-align: right;
+		font-weight: normal;
+	}
+
+	form .required label {
+		font-weight: bold;
+	}
+
+	form .error {
+		color: #E22;
+		font-weight: bold;
+		margin-left: 1em;
+	}
+
+	fieldset {
+		padding: .2em 1em 1em 1em;
+		margin: .5em 0;
+		border: 1px solid #000;
+	}
 </style>
 HTML;
 	}
