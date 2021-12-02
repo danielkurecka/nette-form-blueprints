@@ -16,7 +16,7 @@ a:hover, .form-link:not(.form-link-selected):hover, .tab:not(.tab-selected):hove
 ul {margin: 0;padding: 0;list-style: none;}
 li {padding: 0 0 2px 0;}
 .option-check label {user-select: none;}
-.option-check label[title] {text-decoration: underline #aeaeae; text-decoration-style: dotted;}
+.option-check label[title] {text-decoration: underline #757575; text-decoration-style: dotted;}
 .option {margin-bottom: 5px;}
 .tooltip-copied {color: #fff;background-color: #333;border-radius: 6px;padding: 3px 8px;}
 .render-location {margin-top: 5px;}

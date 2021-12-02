@@ -122,7 +122,11 @@ class BlueprintsPanel implements IBarPanel
 			$response = ['error' => (string) $e];
 		}
 
-		@ob_end_clean();
+		// if something is buffered don't send it as it is not needed
+		while (ob_get_level()) {
+			@ob_end_clean(); // @ - according to docs it may generate E_NOTICE
+		}
+		// in case some output has been already sent, we will print new line and the reciever will parse just last line of the output
 		exit("\n" . Json::encode($response));
 	}
 
