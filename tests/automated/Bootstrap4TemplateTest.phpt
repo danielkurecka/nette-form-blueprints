@@ -199,7 +199,7 @@ class Bootstrap4TemplateTest extends TestCase
 		Assert::same('<div class="form-group"><input n:name="foo" value="foo" class="btn btn-sm btn-primary"></div>', $actual);
 
 		$actual = $this->template()->createButtons((new Button)->setParent(null, 'foo'), (new Button)->setParent(null, 'bar'))->render();
-		Assert::same('<div class="form-group"><input n:name="foo" value="foo" class="btn btn-primary"> <input n:name="bar" value="bar" class="btn"></div>', $actual);
+		Assert::same('<div class="form-group"><input n:name="foo" value="foo" class="btn btn-primary"> <input n:name="bar" value="bar" class="btn btn-secondary"></div>', $actual);
 	}
 
 

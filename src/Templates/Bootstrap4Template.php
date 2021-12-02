@@ -134,7 +134,7 @@ class Bootstrap4Template extends BaseTemplate
 	{
 		$btns = '';
 		foreach ($buttons as $i => $button) {
-			$primary = $i === 0 ? 'btn-primary' : '';
+			$primary = $i === 0 ? 'btn-primary' : 'btn-secondary';
 			$btns .= $this->createButton($button)->appendAttribute('class', ['btn', $this->getInputSize('btn-'), $primary]) . ' ';
 		}
 		return Html::el('div', ['class' => 'form-group'])->setHtml(rtrim($btns));

@@ -122,7 +122,7 @@ class Bootstrap4HorizontalTemplate extends Bootstrap4Template
 	{
 		$btns = '<div class="col-sm-10">';
 		foreach ($buttons as $i => $button) {
-			$primary = $i === 0 ? 'btn-primary' : '';
+			$primary = $i === 0 ? 'btn-primary' : 'btn-secondary';
 			$btns .= $this->createButton($button)->appendAttribute('class', ['btn', $this->getInputSize('btn-'), $primary]) . ' ';
 		}
 		return Html::el('div', ['class' => 'form-group form-row'])->setHtml('<div class="col-sm-2"></div>' . rtrim($btns) . '</div>');
