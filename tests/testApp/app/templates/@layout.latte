@@ -31,6 +31,7 @@
 			<li><a n:href="noLabels" n:tag-if="!$presenter->isLinkCurrent('noLabels')">No labels form</a></li>
 			<li><a n:href="zero" n:tag-if="!$presenter->isLinkCurrent('zero')">Zero forms</a></li>
 			<li><a n:href="manuallyAdded" n:tag-if="!$presenter->isLinkCurrent('manuallyAdded')">Manually added form</a></li>
+			<li><a n:href="ajaxTest" n:tag-if="!$presenter->isLinkCurrent('ajaxTest')">Ajax test</a></li>
 		</ul>
 		{if !$presenter->isLinkCurrent('zero')}
 			<h3>Simple form</h3>

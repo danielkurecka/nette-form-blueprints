@@ -1,0 +1,15 @@
+{block content}
+<h3>Ajax test</h3>
+{control basicForm}
+
+<script>
+	var url = {link this};
+	document.addEventListener('DOMContentLoaded', function () {
+		window.fetch(url);
+		window.fetch(url);
+
+		var req = new XMLHttpRequest;
+		req.open('GET', url);
+		req.send();
+	});
+</script>

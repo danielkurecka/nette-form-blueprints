@@ -152,53 +152,62 @@ function addCommonListeners(root) {
 
 var panel = document.querySelector('#tracy-debug-panel-Daku-Nette-FormBlueprints-BlueprintsPanel');
 
-// put contents of <template> elements to shadow element (for isolated styles)
-var shadow = isolateToShadow(panel.querySelector('template'));
-isolateToShadow(shadow.querySelector('.detail-preview template'), true);
+if (panel.querySelector('.tracy-inner') && !panel.dataset.rendered) {
+	panel.dataset.rendered = '1';
+	// put contents of <template> elements to shadow element (for isolated styles)
+	var shadow = isolateToShadow(panel.querySelector('template'));
+	isolateToShadow(shadow.querySelector('.detail-preview template'), true);
 
-// form switching
-shadow.querySelectorAll('.form-link').forEach(function (el) {
-	el.addEventListener('click', function (e) {
-		el.closest('.form-link-list').querySelectorAll('.form-link').forEach(el => el.classList.remove('form-link-selected'));
-		el.classList.add('form-link-selected');
-		reloadCurrentForm(shadow);
-	});
-});
-
-// template switching
-shadow.querySelector('.template-select').addEventListener('change', (e) => reloadCurrentForm(shadow));
-
-addCommonListeners(shadow);
-
-// tab detail switching
-shadow.querySelectorAll('.tab').forEach(function (el) {
-	el.addEventListener('click', function (e) {
-		el.closest('.tab-row').querySelectorAll('.tab').forEach(el => el.classList.remove('tab-selected'));
-		el.classList.add('tab-selected');
-		shadow.querySelectorAll(el.dataset.targetHide).forEach(el => el.hidden = true);
-		shadow.querySelectorAll(el.dataset.targetShow).forEach(el => el.hidden = false);
-		window.localStorage.setItem('form-blueprints-last-tab-name', el.dataset.tabName);
-		if (el.dataset.tabName === 'preview') {
+	// form switching
+	shadow.querySelectorAll('.form-link').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			el.closest('.form-link-list').querySelectorAll('.form-link').forEach(el => el.classList.remove('form-link-selected'));
+			el.classList.add('form-link-selected');
 			reloadCurrentForm(shadow);
-		}
-		updateAutoResizable(shadow, panel);
+		});
 	});
-});
 
-// show last tab
-var lastTabName = window.localStorage.getItem('form-blueprints-last-tab-name') || 'latte';
-shadow.querySelector('.tab[data-tab-name=' + lastTabName).classList.add('tab-selected');
-shadow.querySelector('.detail-' + lastTabName).hidden = false;
-if (lastTabName === 'preview') {
-	reloadCurrentForm(shadow);
+	// template switching
+	shadow.querySelector('.template-select').addEventListener('change', (e) => reloadCurrentForm(shadow));
+
+	addCommonListeners(shadow);
+
+	// tab detail switching
+	shadow.querySelectorAll('.tab').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			el.closest('.tab-row').querySelectorAll('.tab').forEach(el => el.classList.remove('tab-selected'));
+			el.classList.add('tab-selected');
+			shadow.querySelectorAll(el.dataset.targetHide).forEach(el => el.hidden = true);
+			shadow.querySelectorAll(el.dataset.targetShow).forEach(el => el.hidden = false);
+			window.localStorage.setItem('form-blueprints-last-tab-name', el.dataset.tabName);
+			if (el.dataset.tabName === 'preview') {
+				reloadCurrentForm(shadow);
+			}
+			updateAutoResizable(shadow, panel);
+		});
+	});
+
+	// show last tab
+	var lastTabName = window.localStorage.getItem('form-blueprints-last-tab-name') || 'latte';
+	shadow.querySelector('.tab[data-tab-name=' + lastTabName).classList.add('tab-selected');
+	shadow.querySelector('.detail-' + lastTabName).hidden = false;
+	if (lastTabName === 'preview') {
+		reloadCurrentForm(shadow);
+	}
+
+	// auto resize according to panel
+	new ResizeObserver(() => updateAutoResizable(shadow, panel)).observe(panel);
+
+	// syntax highlighting using Prism
+	var script = document.createElement('script');
+	script.src = 'https://cdn.jsdelivr.net/combine/npm/prismjs@1.19.0,npm/prismjs@1.19.0/components/prism-markup-templating.min.js,npm/prismjs@1.19.0/components/prism-php.min.js,npm/prismjs@1.19.0/components/prism-latte.min.js,npm/prismjs@1.19.0/plugins/keep-markup/prism-keep-markup.min.js';
+	script.dataset.manual = '';
+	script.onload = () => prismHighlight(shadow);
+	shadow.append(script);
+
+} else {
+	var ajaxPanelInners = document.querySelectorAll('[id^="tracy-debug-panel-Daku-Nette-FormBlueprints-BlueprintsPanel-ajax"] .tracy-inner');
+	for (var inner of ajaxPanelInners) {
+		inner.textContent = 'Not available for ajax requests.';
+	}
 }
-
-// auto resize according to panel
-new ResizeObserver(() => updateAutoResizable(shadow, panel)).observe(panel);
-
-// syntax highlighting using Prism
-var script = document.createElement('script');
-script.src = 'https://cdn.jsdelivr.net/combine/npm/prismjs@1.19.0,npm/prismjs@1.19.0/components/prism-markup-templating.min.js,npm/prismjs@1.19.0/components/prism-php.min.js,npm/prismjs@1.19.0/components/prism-latte.min.js,npm/prismjs@1.19.0/plugins/keep-markup/prism-keep-markup.min.js';
-script.dataset.manual = '';
-script.onload = () => prismHighlight(shadow);
-shadow.append(script);
