@@ -177,7 +177,7 @@ abstract class BaseTemplate implements Template
 
 	public function getCaption(BaseControl $control)
 	{
-		return $control->caption === null ? $control->getName() : '{' . $this->getFormVar($control) . '[' . $control->getName() . ']->caption}';
+		return (string) $control->caption === '' ? $control->getName() : '{' . $this->getFormVar($control) . '[' . $control->getName() . ']->caption}';
 	}
 
 

@@ -41,6 +41,14 @@ class BlueprintsGenerator
 
 	public function generate(Form $formControl, Template $template): string
 	{
+		if ($formControl->getTranslator()) { // workaround for issue #1
+			foreach ($formControl->getControls() as $control) {
+				if ($control instanceof BaseControl && $control->getCaption() === null) {
+					$control->setCaption(new Html);
+				}
+			}
+		}
+
 		$this->processedControls = new \SplObjectStorage;
 		$form = $template->createForm($formControl);
 		$form->addHtml($template->createErrorList());
