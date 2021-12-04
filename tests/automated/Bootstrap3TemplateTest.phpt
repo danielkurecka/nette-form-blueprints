@@ -146,13 +146,13 @@ class Bootstrap3TemplateTest extends TestCase
 	public function testCreateButtons()
 	{
 		$actual = $this->template()->createButtons((new Button)->setParent(null, 'foo'))->render();
-		Assert::same('<div class="form-group"><input n:name="foo" value="foo" class="btn btn-primary"></div>', $actual);
+		Assert::same('<div class="form-group">{*select:foo*}<input n:name="foo" value="foo" class="btn btn-primary">{*/select*}</div>', $actual);
 
 		$actual = $this->template(['inputSize' => 'sm'])->createButtons((new Button)->setParent(null, 'foo'))->render();
-		Assert::same('<div class="form-group"><input n:name="foo" value="foo" class="btn btn-sm btn-primary"></div>', $actual);
+		Assert::same('<div class="form-group">{*select:foo*}<input n:name="foo" value="foo" class="btn btn-sm btn-primary">{*/select*}</div>', $actual);
 
 		$actual = $this->template()->createButtons((new Button)->setParent(null, 'foo'), (new Button)->setParent(null, 'bar'))->render();
-		Assert::same('<div class="form-group"><input n:name="foo" value="foo" class="btn btn-primary"> <input n:name="bar" value="bar" class="btn btn-default"></div>', $actual);
+		Assert::same('<div class="form-group">{*select:foo*}<input n:name="foo" value="foo" class="btn btn-primary">{*/select*} {*select:bar*}<input n:name="bar" value="bar" class="btn btn-default">{*/select*}</div>', $actual);
 	}
 
 

@@ -167,13 +167,13 @@ class Bootstrap4HorizontalTemplateTest extends TestCase
 	public function testCreateButtons()
 	{
 		$actual = $this->template()->createButtons((new Button)->setParent(null, 'foo'))->render();
-		Assert::same('<div class="form-group form-row"><div class="col-sm-2"></div><div class="col-sm-10"><input n:name="foo" value="foo" class="btn btn-primary"></div></div>', $actual);
+		Assert::same('<div class="form-group form-row"><div class="col-sm-2"></div><div class="col-sm-10">{*select:foo*}<input n:name="foo" value="foo" class="btn btn-primary">{*/select*}</div></div>', $actual);
 
 		$actual = $this->template(['inputSize' => 'sm'])->createButtons((new Button)->setParent(null, 'foo'))->render();
-		Assert::same('<div class="form-group form-row"><div class="col-sm-2"></div><div class="col-sm-10"><input n:name="foo" value="foo" class="btn btn-sm btn-primary"></div></div>', $actual);
+		Assert::same('<div class="form-group form-row"><div class="col-sm-2"></div><div class="col-sm-10">{*select:foo*}<input n:name="foo" value="foo" class="btn btn-sm btn-primary">{*/select*}</div></div>', $actual);
 
 		$actual = $this->template()->createButtons((new Button)->setParent(null, 'foo'), (new Button)->setParent(null, 'bar'))->render();
-		Assert::same('<div class="form-group form-row"><div class="col-sm-2"></div><div class="col-sm-10"><input n:name="foo" value="foo" class="btn btn-primary"> <input n:name="bar" value="bar" class="btn btn-secondary"></div></div>', $actual);
+		Assert::same('<div class="form-group form-row"><div class="col-sm-2"></div><div class="col-sm-10">{*select:foo*}<input n:name="foo" value="foo" class="btn btn-primary">{*/select*} {*select:bar*}<input n:name="bar" value="bar" class="btn btn-secondary">{*/select*}</div></div>', $actual);
 	}
 
 

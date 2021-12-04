@@ -77,10 +77,10 @@ class LineBreaksTemplateTest extends TestCase
 	public function testCreateButtons()
 	{
 		$actual = $this->template()->createButtons((new Button)->setParent(null, 'foo'))->render();
-		Assert::same('<input n:name="foo" value="foo"><br>', $actual);
+		Assert::same('{*select:foo*}<input n:name="foo" value="foo">{*/select*}<br>', $actual);
 
 		$actual = $this->template()->createButtons((new Button)->setParent(null, 'foo'), (new Button)->setParent(null, 'bar'))->render();
-		Assert::same('<input n:name="foo" value="foo"> <input n:name="bar" value="bar"><br>', $actual);
+		Assert::same('{*select:foo*}<input n:name="foo" value="foo">{*/select*} {*select:bar*}<input n:name="bar" value="bar">{*/select*}<br>', $actual);
 	}
 
 }

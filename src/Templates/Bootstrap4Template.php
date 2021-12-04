@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Daku\Nette\FormBlueprints\Templates;
 
+use Daku\Nette\FormBlueprints\SelectMarkerHelpers;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Button;
@@ -135,7 +136,7 @@ class Bootstrap4Template extends BaseTemplate
 		$btns = '';
 		foreach ($buttons as $i => $button) {
 			$primary = $i === 0 ? 'btn-primary' : 'btn-secondary';
-			$btns .= $this->createButton($button)->appendAttribute('class', ['btn', $this->getInputSize('btn-'), $primary]) . ' ';
+			$btns .= SelectMarkerHelpers::wrapWithMarker((string) $this->createButton($button)->appendAttribute('class', ['btn', $this->getInputSize('btn-'), $primary]), $button->getName()) . ' ';
 		}
 		return Html::el('div', ['class' => 'form-group'])->setHtml(rtrim($btns));
 	}

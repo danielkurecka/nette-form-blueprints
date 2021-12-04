@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Daku\Nette\FormBlueprints\Templates;
 
+use Daku\Nette\FormBlueprints\SelectMarkerHelpers;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Button;
 use Nette\Forms\Controls\Checkbox;
@@ -60,7 +61,7 @@ class LineBreaksTemplate extends BaseTemplate
 	{
 		$btns = '';
 		foreach ($buttons as $button) {
-			$btns .= $this->createButton($button) . ' ';
+			$btns .= SelectMarkerHelpers::wrapWithMarker((string) $this->createButton($button), $button->getName()) . ' ';
 		}
 		return (new Html)->setHtml(rtrim($btns) . '<br>');
 	}
