@@ -103,7 +103,7 @@ class Bootstrap4HorizontalTemplate extends Bootstrap4Template
 		])->addHtml($input . $label);
 
 		$col = Html::el('div', ['class' => 'col-sm-10'])->addHtml($wrap)->addHtml($this->getInputAdjacentContent($checkboxList, '<div class="form-check">', '</div>'));
-		return Html::el('div', ['class' => 'form-group form-row'])->addHtml($this->createLabel($checkboxList))->addHtml($col);
+		return Html::el('div', ['class' => 'form-group form-row'])->addHtml($this->createLabel($checkboxList)->appendAttribute('class', 'pt-0'))->addHtml($col);
 	}
 
 
@@ -124,7 +124,8 @@ class Bootstrap4HorizontalTemplate extends Bootstrap4Template
 		$btns = '<div class="col-sm-10">';
 		foreach ($buttons as $i => $button) {
 			$primary = $i === 0 ? 'btn-primary' : 'btn-secondary';
-			$btns .= SelectMarkerHelpers::wrapWithMarker((string) $this->createButton($button)->appendAttribute('class', ['btn', $this->getInputSize('btn-'), $primary]), $button->getName()) . ' ';
+			$rightMarginClass = $i + 1 === count($buttons) ? null : 'mr-2';
+			$btns .= SelectMarkerHelpers::wrapWithMarker((string) $this->createButton($button)->appendAttribute('class', ['btn', $this->getInputSize('btn-'), $primary, $rightMarginClass]), $button->getName()) . ' ';
 		}
 		return Html::el('div', ['class' => 'form-group form-row'])->setHtml('<div class="col-sm-2"></div>' . rtrim($btns) . '</div>');
 	}

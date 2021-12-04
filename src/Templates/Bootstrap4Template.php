@@ -136,7 +136,8 @@ class Bootstrap4Template extends BaseTemplate
 		$btns = '';
 		foreach ($buttons as $i => $button) {
 			$primary = $i === 0 ? 'btn-primary' : 'btn-secondary';
-			$btns .= SelectMarkerHelpers::wrapWithMarker((string) $this->createButton($button)->appendAttribute('class', ['btn', $this->getInputSize('btn-'), $primary]), $button->getName()) . ' ';
+			$rightMarginClass = $i + 1 === count($buttons) ? null : 'mr-2';
+			$btns .= SelectMarkerHelpers::wrapWithMarker((string) $this->createButton($button)->appendAttribute('class', ['btn', $this->getInputSize('btn-'), $primary, $rightMarginClass]), $button->getName()) . ' ';
 		}
 		return Html::el('div', ['class' => 'form-group'])->setHtml(rtrim($btns));
 	}
@@ -156,14 +157,14 @@ class Bootstrap4Template extends BaseTemplate
 
 	public function createPreviewWrap(): Html
 	{
-		return Html::el('div', ['class' => 'container-fluid']);
+		return Html::el('div', ['class' => 'container-fluid my-2']);
 	}
 
 
 	public function getStyles(): string
 	{
 		return <<<'HTML'
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
 HTML;
 	}
 

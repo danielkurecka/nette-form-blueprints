@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Daku\Nette\FormBlueprints\Templates;
 
+use Nette\Forms\ControlGroup;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\UploadControl;
 use Nette\Forms\Form;
@@ -27,6 +28,12 @@ class Bootstrap4InlineTemplate extends Bootstrap4Template
 	public function createErrorList(): Html
 	{
 		return parent::createErrorList()->appendAttribute('class', 'w-100');
+	}
+
+
+	public function createGroup(ControlGroup $group): Html
+	{
+		return parent::createGroup($group)->setAttribute('class', 'form-inline');
 	}
 
 

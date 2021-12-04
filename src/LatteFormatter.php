@@ -14,7 +14,7 @@ class LatteFormatter
 
 	private $indetation;
 
-	private $maxLineLenght = 80;
+	private $maxLineLenght = 110;
 
 	private $singleLineTags = ['textarea', 'select', 'label', 'legend', 'th', 'td', 'li', 'span', 'small'];
 

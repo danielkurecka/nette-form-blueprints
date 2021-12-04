@@ -136,13 +136,13 @@ class Bootstrap4HorizontalTemplateTest extends TestCase
 	{
 		$actual = $this->template()->createCheckboxList((new CheckboxList)->setParent(null, 'foo'))->render();
 		Assert::same(
-			'<div class="form-group form-row"><label n:name="foo" class="col-sm-2 col-form-label">foo</label><div class="col-sm-10"><div class="custom-control custom-checkbox" n:foreach="$formContainer[foo]->items as $key => $label"><input n:name="foo:$key" class="custom-control-input"><label n:name="foo:$key" class="custom-control-label">{$label}</label></div><div class="form-check"> <small class="form-text text-muted">Description placeholder</small> <div class="invalid-feedback d-block" n:ifcontent>{inputError foo}</div></div></div></div>',
+			'<div class="form-group form-row"><label n:name="foo" class="col-sm-2 col-form-label pt-0">foo</label><div class="col-sm-10"><div class="custom-control custom-checkbox" n:foreach="$formContainer[foo]->items as $key => $label"><input n:name="foo:$key" class="custom-control-input"><label n:name="foo:$key" class="custom-control-label">{$label}</label></div><div class="form-check"> <small class="form-text text-muted">Description placeholder</small> <div class="invalid-feedback d-block" n:ifcontent>{inputError foo}</div></div></div></div>',
 			$actual
 		);
 
 		$actual = $this->template(['customForms' => false])->createCheckboxList((new CheckboxList)->setParent(null, 'foo'))->render();
 		Assert::same(
-			'<div class="form-group form-row"><label n:name="foo" class="col-sm-2 col-form-label">foo</label><div class="col-sm-10"><div class="form-check" n:foreach="$formContainer[foo]->items as $key => $label"><input n:name="foo:$key" class="form-check-input"><label n:name="foo:$key" class="form-check-label">{$label}</label></div><div class="form-check"> <small class="form-text text-muted">Description placeholder</small> <div class="invalid-feedback d-block" n:ifcontent>{inputError foo}</div></div></div></div>',
+			'<div class="form-group form-row"><label n:name="foo" class="col-sm-2 col-form-label pt-0">foo</label><div class="col-sm-10"><div class="form-check" n:foreach="$formContainer[foo]->items as $key => $label"><input n:name="foo:$key" class="form-check-input"><label n:name="foo:$key" class="form-check-label">{$label}</label></div><div class="form-check"> <small class="form-text text-muted">Description placeholder</small> <div class="invalid-feedback d-block" n:ifcontent>{inputError foo}</div></div></div></div>',
 			$actual
 		);
 	}
@@ -152,13 +152,13 @@ class Bootstrap4HorizontalTemplateTest extends TestCase
 	{
 		$actual = $this->template()->createRadioList((new RadioList)->setParent(null, 'foo'))->render();
 		Assert::same(
-			'<div class="form-group form-row"><label n:name="foo" class="col-sm-2 col-form-label">foo</label><div class="col-sm-10"><div class="custom-control custom-radio" n:foreach="$formContainer[foo]->items as $key => $label"><input n:name="foo:$key" class="custom-control-input"><label n:name="foo:$key" class="custom-control-label">{$label}</label></div><div class="form-check"> <small class="form-text text-muted">Description placeholder</small> <div class="invalid-feedback d-block" n:ifcontent>{inputError foo}</div></div></div></div>',
+			'<div class="form-group form-row"><label n:name="foo" class="col-sm-2 col-form-label pt-0">foo</label><div class="col-sm-10"><div class="custom-control custom-radio" n:foreach="$formContainer[foo]->items as $key => $label"><input n:name="foo:$key" class="custom-control-input"><label n:name="foo:$key" class="custom-control-label">{$label}</label></div><div class="form-check"> <small class="form-text text-muted">Description placeholder</small> <div class="invalid-feedback d-block" n:ifcontent>{inputError foo}</div></div></div></div>',
 			$actual
 		);
 
 		$actual = $this->template(['customForms' => false])->createCheckboxList((new CheckboxList)->setParent(null, 'foo'))->render();
 		Assert::same(
-			'<div class="form-group form-row"><label n:name="foo" class="col-sm-2 col-form-label">foo</label><div class="col-sm-10"><div class="form-check" n:foreach="$formContainer[foo]->items as $key => $label"><input n:name="foo:$key" class="form-check-input"><label n:name="foo:$key" class="form-check-label">{$label}</label></div><div class="form-check"> <small class="form-text text-muted">Description placeholder</small> <div class="invalid-feedback d-block" n:ifcontent>{inputError foo}</div></div></div></div>',
+			'<div class="form-group form-row"><label n:name="foo" class="col-sm-2 col-form-label pt-0">foo</label><div class="col-sm-10"><div class="form-check" n:foreach="$formContainer[foo]->items as $key => $label"><input n:name="foo:$key" class="form-check-input"><label n:name="foo:$key" class="form-check-label">{$label}</label></div><div class="form-check"> <small class="form-text text-muted">Description placeholder</small> <div class="invalid-feedback d-block" n:ifcontent>{inputError foo}</div></div></div></div>',
 			$actual
 		);
 	}
@@ -173,7 +173,7 @@ class Bootstrap4HorizontalTemplateTest extends TestCase
 		Assert::same('<div class="form-group form-row"><div class="col-sm-2"></div><div class="col-sm-10">{*select:foo*}<input n:name="foo" value="foo" class="btn btn-sm btn-primary">{*/select*}</div></div>', $actual);
 
 		$actual = $this->template()->createButtons((new Button)->setParent(null, 'foo'), (new Button)->setParent(null, 'bar'))->render();
-		Assert::same('<div class="form-group form-row"><div class="col-sm-2"></div><div class="col-sm-10">{*select:foo*}<input n:name="foo" value="foo" class="btn btn-primary">{*/select*} {*select:bar*}<input n:name="bar" value="bar" class="btn btn-secondary">{*/select*}</div></div>', $actual);
+		Assert::same('<div class="form-group form-row"><div class="col-sm-2"></div><div class="col-sm-10">{*select:foo*}<input n:name="foo" value="foo" class="btn btn-primary mr-2">{*/select*} {*select:bar*}<input n:name="bar" value="bar" class="btn btn-secondary">{*/select*}</div></div>', $actual);
 	}
 
 

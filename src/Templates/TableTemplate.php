@@ -24,7 +24,7 @@ class TableTemplate extends BaseTemplate
 	public static function getAvailableOptions(): array
 	{
 		return parent::getAvailableOptions() + [
-				'highlightRequired' => new OptionDefinition('Highlight required inputs', '', OptionDefinition::TYPE_CHECKBOX, [true, false], true),
+				'highlightRequired' => new OptionDefinition('Highlight required inputs', '', OptionDefinition::TYPE_CHECKBOX, [true, false], false),
 			];
 	}
 
@@ -99,7 +99,6 @@ class TableTemplate extends BaseTemplate
 	form th, form td {
 		vertical-align: top;
 		padding: .3em .5em;
-		
 	}
 	
 	form th {
