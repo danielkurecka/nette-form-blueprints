@@ -168,6 +168,7 @@ class BlueprintsPanel implements IBarPanel
 	private function createPreview(string $latteFile, Form $form, Template $template): string
 	{
 		return $form->isAnchored() ? $template->getStyles() . $template->createPreviewWrap()->setHtml($this->renderLatteFileToString($form, $latteFile))
+				. "\n<script>document.querySelector('form').addEventListener('submit', (e) => e.preventDefault());</script>"
 			: '<p>Preview is not available, form was not attached to a presener.</p>';
 	}
 

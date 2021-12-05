@@ -38,22 +38,12 @@ function copyToClipboard(root, element) {
 	return result;
 }
 
-function isolateToShadow(templateElement, wrapWithBody = false) {
+function isolateToShadow(templateElement) {
 	var host = document.createElement('div');
 	host.style.all = 'initial';
 	templateElement.before(host);
 	var shadow = host.attachShadow({'mode': 'open'});
-
-	if (wrapWithBody) {
-		var html = document.createElement('html');
-		var body = document.createElement('body');
-		html.append(body);
-		body.append(templateElement.content.cloneNode(true));
-		shadow.append(html);
-	} else {
-		shadow.append(templateElement.content.cloneNode(true));
-	}
-
+	shadow.append(templateElement.content.cloneNode(true));
 	return shadow;
 }
 
@@ -95,8 +85,8 @@ function reloadCurrentForm(root, templateOptions = {}) {
 			root.querySelector('.html-editor-link').setAttribute('href', data['blueprintFileEditorUri']);
 			root.querySelector('.detail-latte pre code').innerHTML = data['latte'];
 			root.querySelector('.select-range-list').innerHTML = data['selectRangeListHtml'];
-			root.querySelector('.detail-preview div').shadowRoot.querySelector('body').innerHTML = data['preview'];
 			root.querySelector('.detail-css pre code').textContent = data['styles'];
+			setIframePreview(root, data['preview'])
 			addCommonListeners(root);
 			prismHighlight(root);
 			updateAutoResizable(root, panel);
@@ -107,6 +97,16 @@ function reloadCurrentForm(root, templateOptions = {}) {
 	if (window.Tracy && window.Tracy.Debug && window.Tracy.Debug.setOptions) {
 		window.Tracy.Debug.setOptions({autoRefresh: tracyRefreshOld})
 	}
+}
+
+function setIframePreview(root, previewContent) {
+	var iframe = document.createElement('iframe')
+	iframe.srcdoc = previewContent;
+	iframe.scrolling = 'no';
+	iframe.onload = () => iframe.style.height = iframe.contentWindow.document.documentElement.scrollHeight + 'px';
+	var previewElement = root.querySelector('.detail-preview');
+	previewElement.innerHTML = '';
+	previewElement.appendChild(iframe);
 }
 
 function updateAutoResizable(root, panel) {
@@ -154,9 +154,8 @@ var panel = document.querySelector('#tracy-debug-panel-Daku-Nette-FormBlueprints
 
 if (panel.querySelector('.tracy-inner') && !panel.dataset.rendered) {
 	panel.dataset.rendered = '1';
-	// put contents of <template> elements to shadow element (for isolated styles)
+	// put panel to shadow element (for isolated styles)
 	var shadow = isolateToShadow(panel.querySelector('template'));
-	isolateToShadow(shadow.querySelector('.detail-preview template'), true);
 
 	// form switching
 	shadow.querySelectorAll('.form-link').forEach(function (el) {
@@ -196,7 +195,9 @@ if (panel.querySelector('.tracy-inner') && !panel.dataset.rendered) {
 	}
 
 	// auto resize according to panel
-	new ResizeObserver(() => updateAutoResizable(shadow, panel)).observe(panel);
+	new ResizeObserver(() => {
+		updateAutoResizable(shadow, panel);
+	}).observe(panel);
 
 	// syntax highlighting using Prism
 	var script = document.createElement('script');
