@@ -10,6 +10,9 @@ use Daku\Nette\FormBlueprints\Templates\Bootstrap3Template;
 use Daku\Nette\FormBlueprints\Templates\Bootstrap4HorizontalTemplate;
 use Daku\Nette\FormBlueprints\Templates\Bootstrap4InlineTemplate;
 use Daku\Nette\FormBlueprints\Templates\Bootstrap4Template;
+use Daku\Nette\FormBlueprints\Templates\Bootstrap5HorizontalTemplate;
+use Daku\Nette\FormBlueprints\Templates\Bootstrap5InlineTemplate;
+use Daku\Nette\FormBlueprints\Templates\Bootstrap5Template;
 use Daku\Nette\FormBlueprints\Templates\LineBreaksTemplate;
 use Daku\Nette\FormBlueprints\Templates\TableTemplate;
 use Daku\Nette\FormBlueprints\Templates\Template;
@@ -34,6 +37,9 @@ class BlueprintsExtension extends CompilerExtension
 			Bootstrap4Template::class,
 			Bootstrap4HorizontalTemplate::class,
 			Bootstrap4InlineTemplate::class,
+			Bootstrap5Template::class,
+			Bootstrap5HorizontalTemplate::class,
+			Bootstrap5InlineTemplate::class,
 		],
 	];
 
