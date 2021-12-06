@@ -19,6 +19,15 @@
 			padding: 5px;
 			list-style: none;
 		}
+
+		a {
+			color: #125eae;
+		}
+
+		a:hover {
+			text-decoration: none;
+		}
+
 	</style>
 </head>
 <body>
@@ -28,10 +37,13 @@
 			<li><a n:href="containers" n:tag-if="!$presenter->isLinkCurrent('containers')">Containers form</a></li>
 			<li><a n:href="groups" n:tag-if="!$presenter->isLinkCurrent('groups')">Groups form</a></li>
 			<li><a n:href="multiple" n:tag-if="!$presenter->isLinkCurrent('multiple')">Multiple forms</a></li>
-			<li><a n:href="noLabels" n:tag-if="!$presenter->isLinkCurrent('noLabels')">No labels form</a></li>
 			<li><a n:href="zero" n:tag-if="!$presenter->isLinkCurrent('zero')">Zero forms</a></li>
 			<li><a n:href="manuallyAdded" n:tag-if="!$presenter->isLinkCurrent('manuallyAdded')">Manually added form</a></li>
 			<li><a n:href="ajaxTest" n:tag-if="!$presenter->isLinkCurrent('ajaxTest')">Ajax test</a></li>
+		</ul>
+		<ul class="nav">
+			<li><a n:href="changeAddLabels! !$addLabels">Toggle add labels</a></li>
+			<li><a n:href="changeAddErrors! !$addErrors">Toggle add errors</a></li>
 		</ul>
 		{if !$presenter->isLinkCurrent('zero')}
 			<h3>Simple form</h3>
