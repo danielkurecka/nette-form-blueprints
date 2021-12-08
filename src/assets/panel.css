@@ -21,8 +21,11 @@ li {padding: 0 0 2px 0;}
 .tooltip-copied {color: #fff;background-color: #333;border-radius: 6px;padding: 3px 8px;}
 .render-location {margin-top: 5px;}
 .spinner {margin-top: 10px;margin-left: auto;display: inline-block;width: 1.3rem;height: 1.3rem;vertical-align: text-bottom;border: .25em solid #575753;border-right-color: transparent;border-radius: 50%;-webkit-animation: spinner .75s linear infinite;animation: spinner .75s linear infinite;}
-iframe {width: 100%; height: 100%; border: none; overflow: hidden}
+.detail-preview iframe {width: 100%; height: 100%; border: none; overflow: hidden}
 @keyframes spinner { to { transform: rotate(360deg); } }
+.prism-iframe {width: 0; height: 0; border: 0; position: absolute;}
+[hidden] {display: none !important;}
+
 /* styles for Prism syntax highlighting */
 pre {border-radius: 5px; border: 1px dotted silver; background: #f1f7ff;box-shadow: inset 1px 1px 10px #e9f1fd;padding: 10px;}
 code {font-family: Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace;}
@@ -47,4 +50,3 @@ pre > code .token.inserted:not(.prefix) {background-color: rgba(0, 255, 128, .1)
 .language-latte .token.attr-value {color: #448ccb;font-weight: 700}
 .language-latte .token.property {font-weight: 700}
 .language-latte .token.ld .token.tag, .language-latte .token.n-attr .token.attr-name {color: #e03c3c;font-weight: 700}
-[hidden] {display: none !important;}

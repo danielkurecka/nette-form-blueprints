@@ -47,9 +47,10 @@ function isolateToShadow(templateElement) {
 	return shadow;
 }
 
-function prismHighlight(target) {
-	if (window.Prism) {
-		window.Prism.highlightAllUnder(target)
+function prismHighlight(root) {
+	var iframe = root.querySelector('.prism-iframe')
+	if (iframe.contentWindow.Prism) {
+		iframe.contentWindow.Prism.highlightAllUnder(root);
 	}
 }
 
@@ -201,17 +202,17 @@ if (panel.querySelector('.tracy-inner') && !panel.dataset.rendered) {
 	// auto resize according to panel
 	new ResizeObserver(() => {
 		updateAutoResizable(shadow, panel);
-		for (const iframe of shadow.querySelectorAll('iframe')) {
+		var iframe = shadow.querySelector('.detail-preview iframe');
+		if (iframe) {
 			adjustIframeHeightByItsContent(iframe);
 		}
 	}).observe(panel);
 
 	// syntax highlighting using Prism
-	var script = document.createElement('script');
-	script.src = 'https://cdn.jsdelivr.net/combine/npm/prismjs@1.19.0,npm/prismjs@1.19.0/components/prism-markup-templating.min.js,npm/prismjs@1.19.0/components/prism-php.min.js,npm/prismjs@1.19.0/components/prism-latte.min.js,npm/prismjs@1.19.0/plugins/keep-markup/prism-keep-markup.min.js';
-	script.dataset.manual = '';
-	script.onload = () => prismHighlight(shadow);
-	shadow.append(script);
+	var prismIframe = shadow.querySelector('.prism-iframe');
+	prismIframe.onload = () => prismHighlight(shadow);
+	prismIframe.srcdoc = prismIframe.getAttribute('data-srcdoc');
+	prismIframe.removeAttribute('data-srcdoc');
 
 } else {
 	var ajaxPanelInners = document.querySelectorAll('[id^="tracy-debug-panel-Daku-Nette-FormBlueprints-BlueprintsPanel-ajax"] .tracy-inner');
