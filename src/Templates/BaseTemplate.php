@@ -30,9 +30,9 @@ abstract class BaseTemplate implements Template
 	public static function getAvailableOptions(): array
 	{
 		return [
-			'novalidate' => new OptionDefinition('Add novalidate attribute', 'Disables Nette/browser client side validation', OptionDefinition::TYPE_CHECKBOX, [true, false], true),
-			'inputErrros' => new OptionDefinition('Add individual input errors', '', OptionDefinition::TYPE_CHECKBOX, [true, false], false),
-			'inputDescriptions' => new OptionDefinition('Add input descriptions', '', OptionDefinition::TYPE_CHECKBOX, [true, false], false),
+			'novalidate' => new OptionDefinition('novalidate attribute', 'Disables Nette/browser client side validation', OptionDefinition::TYPE_CHECKBOX, [true, false], true),
+			'inputErrros' => new OptionDefinition('Individual input errors', '', OptionDefinition::TYPE_CHECKBOX, [true, false], false),
+			'inputDescriptions' => new OptionDefinition('Input descriptions', '', OptionDefinition::TYPE_CHECKBOX, [true, false], false),
 		];
 	}
 

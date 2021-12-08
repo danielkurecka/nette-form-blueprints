@@ -26,7 +26,7 @@ class Bootstrap3Template extends BaseTemplate
 	public static function getAvailableOptions(): array
 	{
 		return parent::getAvailableOptions() + [
-				'placeholdersAsLabels' => new OptionDefinition('Use placeholders as labels', '', OptionDefinition::TYPE_CHECKBOX, [true, false], false),
+				'placeholdersAsLabels' => new OptionDefinition('Placeholders as labels', '', OptionDefinition::TYPE_CHECKBOX, [true, false], false),
 				'inputSize' => new OptionDefinition('Input size', '', OptionDefinition::TYPE_SELECT, ['' => 'default', 'sm' => 'small', 'lg' => 'large'], ''),
 			];
 	}

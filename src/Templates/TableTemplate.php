@@ -24,7 +24,7 @@ class TableTemplate extends BaseTemplate
 	public static function getAvailableOptions(): array
 	{
 		return parent::getAvailableOptions() + [
-				'highlightRequired' => new OptionDefinition('Highlight required inputs', '', OptionDefinition::TYPE_CHECKBOX, [true, false], false),
+				'highlightRequired' => new OptionDefinition('Highlight required', '', OptionDefinition::TYPE_CHECKBOX, [true, false], false),
 			];
 	}
 

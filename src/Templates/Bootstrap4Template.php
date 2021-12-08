@@ -26,8 +26,8 @@ class Bootstrap4Template extends BaseTemplate
 	public static function getAvailableOptions(): array
 	{
 		return parent::getAvailableOptions() + [
-				'customForms' => new OptionDefinition('Use custom forms', 'Bootstrap\'s custom look for checkbox, radio, selectbox and file inputs', OptionDefinition::TYPE_CHECKBOX, [true, false], false),
-				'placeholdersAsLabels' => new OptionDefinition('Use placeholders as labels', '', OptionDefinition::TYPE_CHECKBOX, [true, false], false),
+				'customForms' => new OptionDefinition('Custom forms', 'Bootstrap\'s custom look for checkbox, radio, selectbox and file inputs', OptionDefinition::TYPE_CHECKBOX, [true, false], false),
+				'placeholdersAsLabels' => new OptionDefinition('Placeholders as labels', '', OptionDefinition::TYPE_CHECKBOX, [true, false], false),
 				'inputSize' => new OptionDefinition('Input size', '', OptionDefinition::TYPE_SELECT, ['' => 'default', 'sm' => 'small', 'lg' => 'large'], ''),
 			];
 	}
