@@ -103,10 +103,14 @@ function setIframePreview(root, previewContent) {
 	var iframe = document.createElement('iframe')
 	iframe.srcdoc = previewContent;
 	iframe.scrolling = 'no';
-	iframe.onload = () => iframe.style.height = iframe.contentWindow.document.documentElement.scrollHeight + 'px';
+	iframe.onload = () => adjustIframeHeightByItsContent(iframe);
 	var previewElement = root.querySelector('.detail-preview');
 	previewElement.innerHTML = '';
 	previewElement.appendChild(iframe);
+}
+
+function adjustIframeHeightByItsContent(iframeElement) {
+	iframeElement.style.height = iframeElement.contentWindow.document.documentElement.scrollHeight + 'px';
 }
 
 function updateAutoResizable(root, panel) {
@@ -197,6 +201,9 @@ if (panel.querySelector('.tracy-inner') && !panel.dataset.rendered) {
 	// auto resize according to panel
 	new ResizeObserver(() => {
 		updateAutoResizable(shadow, panel);
+		for (const iframe of shadow.querySelectorAll('iframe')) {
+			adjustIframeHeightByItsContent(iframe);
+		}
 	}).observe(panel);
 
 	// syntax highlighting using Prism
