@@ -48,25 +48,27 @@ class Bootstrap4InlineTemplateTest extends TestCase
 	{
 		$actual = $this->template()->createUpload((new UploadControl)->setParent(null, 'foo'))->render();
 		Assert::same(
-			'<div class="form-group"><div class="custom-file w-auto"><input n:name="foo" class="custom-file-input"> <label n:name="foo" class="custom-file-label d-inline-block mt-n1 mr-sm-2">foo</label></div> <small class="form-text text-muted mb-2 mr-sm-2">Description placeholder</small> <div class="invalid-feedback d-block w-auto mb-2 mr-sm-2" n:ifcontent>{inputError foo}</div></div>',
+			'<div class="form-group mr-2 mr-sm-0"><div class="custom-file w-auto"><input n:name="foo" class="custom-file-input"> <label n:name="foo" class="custom-file-label d-inline-block mt-n1 mr-sm-2">foo</label></div> <small class="form-text text-muted mb-2 mr-2">Description placeholder</small> <div class="invalid-feedback d-block w-auto mb-2 mr-2" n:ifcontent>{inputError foo}</div></div>',
 			$actual
 		);
 
 		$actual = $this->template(['inputSize' => 'sm'])->createUpload((new UploadControl)->setParent(null, 'foo'))->render();
+
 		Assert::same(
-			'<div class="form-group"><div class="custom-file w-auto"><input n:name="foo" class="custom-file-input form-control-sm"> <label n:name="foo" class="custom-file-label d-inline-block mt-n1 mr-sm-2 col-form-label-sm">foo</label></div> <small class="form-text text-muted mb-2 mr-sm-2">Description placeholder</small> <div class="invalid-feedback d-block w-auto mb-2 mr-sm-2" n:ifcontent>{inputError foo}</div></div>',
+			'<div class="form-group mr-2 mr-sm-0"><div class="custom-file w-auto"><input n:name="foo" class="custom-file-input form-control-sm"> <label n:name="foo" class="custom-file-label d-inline-block mt-n1 mr-sm-2 col-form-label-sm">foo</label></div> <small class="form-text text-muted mb-2 mr-2">Description placeholder</small> <div class="invalid-feedback d-block w-auto mb-2 mr-2" n:ifcontent>{inputError foo}</div></div>',
 			$actual
 		);
 
 		$actual = $this->template(['customForms' => false])->createUpload((new UploadControl)->setParent(null, 'foo'))->render();
+
 		Assert::same(
-			'<div class="form-group"><label n:name="foo" class="mb-2 mr-sm-2">foo</label> <input n:name="foo" class="form-control-file d-inline-block w-auto mb-2 mr-sm-2"> <small class="form-text text-muted mb-2 mr-sm-2">Description placeholder</small> <div class="invalid-feedback d-block w-auto mb-2 mr-sm-2" n:ifcontent>{inputError foo}</div></div>',
+			'<div class="form-group mr-2 mr-sm-0"><label n:name="foo" class="mb-2 mr-2">foo</label> <input n:name="foo" class="form-control-file d-inline-block w-auto mb-2 mr-2"> <small class="form-text text-muted mb-2 mr-2">Description placeholder</small> <div class="invalid-feedback d-block w-auto mb-2 mr-2" n:ifcontent>{inputError foo}</div></div>',
 			$actual
 		);
 
 		$actual = $this->template(['customForms' => false, 'inputSize' => 'sm'])->createUpload((new UploadControl)->setParent(null, 'foo'))->render();
 		Assert::same(
-			'<div class="form-group"><label n:name="foo" class="mb-2 mr-sm-2">foo</label> <input n:name="foo" class="form-control-file form-control-sm d-inline-block w-auto mb-2 mr-sm-2"> <small class="form-text text-muted mb-2 mr-sm-2">Description placeholder</small> <div class="invalid-feedback d-block w-auto mb-2 mr-sm-2" n:ifcontent>{inputError foo}</div></div>',
+			'<div class="form-group mr-2 mr-sm-0"><label n:name="foo" class="mb-2 mr-2">foo</label> <input n:name="foo" class="form-control-file form-control-sm d-inline-block w-auto mb-2 mr-2"> <small class="form-text text-muted mb-2 mr-2">Description placeholder</small> <div class="invalid-feedback d-block w-auto mb-2 mr-2" n:ifcontent>{inputError foo}</div></div>',
 			$actual
 		);
 	}
@@ -75,34 +77,34 @@ class Bootstrap4InlineTemplateTest extends TestCase
 	public function testCreateInput()
 	{
 		$actual = $this->template()->createInput((new TextInput)->setParent(null, 'foo'))->render();
-		Assert::same('<input n:name="foo" class="mb-2 mr-sm-2">', $actual);
+		Assert::same('<input n:name="foo" class="mb-2 mr-2">', $actual);
 	}
 
 
 	public function testCreateLabel()
 	{
 		$actual = $this->template()->createLabel((new TextInput)->setParent(null, 'foo'))->render();
-		Assert::same('<label n:name="foo" class="mb-2 mr-sm-2">foo</label>', $actual);
+		Assert::same('<label n:name="foo" class="mb-2 mr-2">foo</label>', $actual);
 
 		$actual = $this->template()->createLabel((new TextInput('Foo'))->setParent(null, 'foo'))->render();
-		Assert::same('<label n:name="foo" class="mb-2 mr-sm-2">{$formContainer[foo]->caption}</label>', $actual);
+		Assert::same('<label n:name="foo" class="mb-2 mr-2">{$formContainer[foo]->caption}</label>', $actual);
 	}
 
 
 	public function testCreateInputError()
 	{
 		$actual = $this->template()->createInputError((new TextInput())->setParent(null, 'foo'))->render();
-		Assert::same('<div class="invalid-feedback d-block w-auto mb-2 mr-sm-2" n:ifcontent>{inputError foo}</div>', $actual);
+		Assert::same('<div class="invalid-feedback d-block w-auto mb-2 mr-2" n:ifcontent>{inputError foo}</div>', $actual);
 	}
 
 
 	public function testCreateInputDescription()
 	{
 		$actual = $this->template()->createInputDescription((new TextInput())->setParent(null, 'foo'))->render();
-		Assert::same('<small class="form-text text-muted mb-2 mr-sm-2">Description placeholder</small>', $actual);
+		Assert::same('<small class="form-text text-muted mb-2 mr-2">Description placeholder</small>', $actual);
 
 		$actual = $this->template()->createInputDescription((new TextInput())->setParent(null, 'foo')->setOption('description', 'Foo description'))->render();
-		Assert::same('<small class="form-text text-muted mb-2 mr-sm-2">{$formContainer[foo]->getOption(description)}</small>', $actual);
+		Assert::same('<small class="form-text text-muted mb-2 mr-2">{$formContainer[foo]->getOption(description)}</small>', $actual);
 	}
 
 }
