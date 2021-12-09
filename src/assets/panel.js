@@ -55,11 +55,12 @@ function prismHighlight(root) {
 }
 
 function reloadCurrentForm(root, templateOptions = {}) {
+	var previewTabActive = root.querySelector('.tab-selected').dataset.tabName === 'preview';
 	var params = {
 		formId: getSelectedFormId(root),
 		templateName: getSelectedTemplateName(root),
 		options: templateOptions,
-		renderPreview: root.querySelector('.tab-selected').dataset.tabName === 'preview',
+		renderPreview: previewTabActive,
 	};
 
 	var tracyRefreshOld = window.TracyAutoRefresh;
@@ -87,7 +88,9 @@ function reloadCurrentForm(root, templateOptions = {}) {
 			root.querySelector('.detail-latte pre code').innerHTML = data['latte'];
 			root.querySelector('.select-range-list').innerHTML = data['selectRangeListHtml'];
 			root.querySelector('.detail-css pre code').textContent = data['styles'];
-			setIframePreview(root, data['preview'])
+			setIframePreview(root, data['preview']);
+			root.querySelector('.detail-preview').dataset.rendered = previewTabActive ? '1' : '0';
+
 			addCommonListeners(root);
 			prismHighlight(root);
 			updateAutoResizable(root, panel);
@@ -189,7 +192,8 @@ if (panel.querySelector('.tracy-inner') && !panel.dataset.rendered) {
 			shadow.querySelectorAll(el.dataset.targetHide).forEach(el => el.hidden = true);
 			shadow.querySelectorAll(el.dataset.targetShow).forEach(el => el.hidden = false);
 			window.localStorage.setItem('form-blueprints-last-tab-name', el.dataset.tabName);
-			if (el.dataset.tabName === 'preview') {
+			var previewRendered = parseInt(shadow.querySelector('.detail-preview').dataset.rendered)
+			if (el.dataset.tabName === 'preview' && !previewRendered) {
 				reloadCurrentForm(shadow);
 			}
 			updateAutoResizable(shadow, panel);
