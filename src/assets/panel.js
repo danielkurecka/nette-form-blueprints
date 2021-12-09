@@ -144,12 +144,17 @@ function addCommonListeners(root) {
 		});
 	});
 
-	// copy individual items
+	// select individual items
 	root.querySelector('.select-range-list').addEventListener('click', function (e) {
 		var target = e.target;
 		if (target.nodeName === 'A') {
 			var rangeElement = root.querySelectorAll('.select-range').item(target.getAttribute('data-index'));
-			copyToClipboard(root, rangeElement)
+			rangeElement.scrollIntoView({behavior: 'smooth', block: 'center'});
+			var range = document.createRange();
+			range.selectNodeContents(rangeElement);
+			var selection = window.getSelection();
+			selection.removeAllRanges();
+			selection.addRange(range);
 			e.preventDefault();
 		}
 	});

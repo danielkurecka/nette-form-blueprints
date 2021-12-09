@@ -30,7 +30,7 @@ li {padding: 0 0 2px 0;}
 pre {border-radius: 5px; border: 1px dotted silver; background: #f1f7ff;box-shadow: inset 1px 1px 10px #e9f1fd;padding: 10px;}
 code {font-family: Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace;}
 code[class*=language-], pre[class*=language-] {color: #000;text-shadow: 0 1px #ffffffc2;white-space: pre;word-spacing: normal;word-break: normal;word-wrap: normal;-moz-tab-size: 4;tab-size: 4;hyphens: none}
-code[class*=language-] ::selection, code[class*=language-]::selection, pre[class*=language-] ::selection, pre[class*=language-]::selection {text-shadow: none;background: #b3d4fc}
+/*code[class*=language-] ::selection, code[class*=language-]::selection, pre[class*=language-] ::selection, pre[class*=language-]::selection {text-shadow: none;background: #b3d4fc}*/
 .token.cdata, .token.comment, .token.doctype, .token.prolog {color: #708090}
 .token.punctuation {color: #999}
 .namespace {opacity: .7}

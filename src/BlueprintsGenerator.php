@@ -51,7 +51,7 @@ class BlueprintsGenerator
 
 		$this->processedControls = new \SplObjectStorage;
 		$form = $template->createForm($formControl);
-		$form->addHtml($template->createErrorList());
+		$form->addHtml(SelectMarkerHelpers::wrapWithMarker((string) $template->createErrorList(), 'error-list'));
 
 		foreach ($formControl->getGroups() as $group) {
 			$groupControls = $this->generateControls($this->extractControlsFromGroup($group), $template);

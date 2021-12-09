@@ -136,7 +136,7 @@ class BlueprintsPanel implements IBarPanel
 		$latte = $this->generator->generate($form, $template);
 		$file = $this->tempDir . '/' . $this->getFormId($form) . '-' . preg_replace('~[^a-z0-9]+~i', '-', $template->getName()) . '.latte';
 		FileSystem::write($file, SelectMarkerHelpers::removeMarkers($latte));
-		$selectRangeListHtml = implode(' | ', Arrays::map(SelectMarkerHelpers::getMarkerNames($latte), fn($name, $i) => (Html::el('a', ['href' => '#', 'data-index' => $i])->setText($name))));
+		$selectRangeListHtml = implode(', ', Arrays::map(SelectMarkerHelpers::getMarkerNames($latte), fn($name, $i) => (Html::el('a', ['href' => '#', 'data-index' => $i])->setText($name))));
 		$latte = htmlspecialchars($latte);
 		$latte = SelectMarkerHelpers::replaceMarkers($latte, '<span class="select-range" data-name="$1">', '</span>');
 		$preview = $renderPreview ? $this->createPreview($file, $form, $template) : null;

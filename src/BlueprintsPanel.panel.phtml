@@ -58,20 +58,18 @@ use Tracy\Helpers;
 					</div>
 					<?php [$file, $latteEscaped, , $selectRangeListHtml] = $this->prepareBlueprint($this->getCurrentForm(), $this->getCurrentTemplate()) ?>
 					<div class="detail detail-latte" hidden>
-						<p>
-							<a href="#" class="copy-button">Copy to clipboard</a> |
-							<a href="<?= Helpers::editorUri($file) ?>" class="html-editor-link" title="<?= $file ?>">Open in editor</a>
-							<span class="tooltip-copied" hidden>Copied</span><br>
-							Copy individual: <span class="select-range-list"><?= $selectRangeListHtml ?></span>
-						</p>
+						<a href="#" class="copy-button">Copy to clipboard</a> |
+						<a href="<?= Helpers::editorUri($file) ?>" class="html-editor-link" title="<?= $file ?>">Open in editor</a>
+						<span class="tooltip-copied" hidden>Copied</span>
+						<div title="After selecting press Ctrl+C to copy">
+							Select individual: <span class="select-range-list"><?= $selectRangeListHtml ?></span>
+						</div>
 						<pre class="auto-resizable"><code class="language-latte"><?= $latteEscaped ?></code></pre>
 					</div>
 					<div class="detail detail-preview auto-resizable" hidden></div>
 					<div class="detail detail-css" hidden>
-						<p>
-							<a href="#" class="copy-button">Copy to clipboard</a>
-							<span class="tooltip-copied" hidden>Copied</span>
-						</p>
+						<a href="#" class="copy-button">Copy to clipboard</a>
+						<span class="tooltip-copied" hidden>Copied</span>
 						<pre class="auto-resizable"><code class="language-latte"><?= htmlspecialchars($this->getCurrentTemplate()->getStyles()) ?></code></pre>
 					</div>
 				</main>
