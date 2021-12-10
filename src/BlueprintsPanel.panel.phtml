@@ -64,13 +64,17 @@ use Tracy\Helpers;
 						<div title="After selecting press Ctrl+C to copy">
 							Select individual: <span class="select-range-list"><?= $selectRangeListHtml ?></span>
 						</div>
-						<pre class="auto-resizable"><code class="language-latte"><?= $latteEscaped ?></code></pre>
+						<div class="code-wrap">
+							<pre class="auto-resizable"><code class="language-latte"><?= $latteEscaped ?></code></pre>
+						</div>
 					</div>
 					<div class="detail detail-preview auto-resizable" data-rendered="0" hidden></div>
 					<div class="detail detail-css" hidden>
 						<a href="#" class="copy-button">Copy to clipboard</a>
 						<span class="tooltip-copied" hidden>Copied</span>
-						<pre class="auto-resizable"><code class="language-latte"><?= htmlspecialchars($this->getCurrentTemplate()->getStyles()) ?></code></pre>
+						<div class="code-wrap">
+							<pre class="auto-resizable"><code class="language-latte"><?= htmlspecialchars($this->getCurrentTemplate()->getStyles()) ?></code></pre>
+						</div>
 					</div>
 				</main>
 			</div>
@@ -84,6 +88,7 @@ use Tracy\Helpers;
 		<style class="tracy-debug">
 			div#tracy-debug #tracy-debug-panel-Daku-Nette-FormBlueprints-BlueprintsPanel {width: 800px;height: 550px;max-width: initial;max-height: initial; overflow: hidden}
 			body#tracy-debug #tracy-debug-panel-Daku-Nette-FormBlueprints-BlueprintsPanel {height: 100vh; overflow: hidden}
+			#tracy-debug-panel-Daku-Nette-FormBlueprints-BlueprintsPanel .tracy-inner {overflow: hidden}
 		</style>
 	<?php else: ?>
 		<p>No forms added to the panel.</p>

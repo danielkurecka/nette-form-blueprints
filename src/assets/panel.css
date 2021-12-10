@@ -6,7 +6,6 @@ aside {padding-right: 10px;flex: 0 0 180px;}  main {width: 100%;}
 .tab-row {display: flex;border-bottom: 1px solid #d6d6d6;margin-bottom: 10px;}
 .tab {padding: 10px;user-select: none;}
 .tab-selected {font-weight: bold;border: 1px solid #d6d6d6;border-radius: 3px 3px 0 0;border-bottom: none;box-shadow: 0px 2px 0px 0px #fff;}
-.auto-resizable {max-width: 580px;max-height: 390px;overflow: auto;padding: 5px 10px;}
 .form-link-list {margin-bottom: 5px}
 a, .form-link:not(.form-link-selected), .tab:not(.tab-selected) {color: #125eae;text-decoration: none;cursor: pointer;}
 .form-link-selected {font-weight: bold;}
@@ -25,12 +24,14 @@ li {padding: 0 0 2px 0;}
 @keyframes spinner { to { transform: rotate(360deg); } }
 .prism-iframe {width: 0; height: 0; border: 0; position: absolute;}
 [hidden] {display: none !important;}
+.auto-resizable {max-width: 580px;max-height: 390px;overflow: auto;padding: 5px 10px 5px 0;}
+.code-wrap {border-radius: 5px; border: 1px dotted silver; background: #f1f7ff;box-shadow: inset 1px 1px 10px #e9f1fd;padding-left: 10px;margin: 10px 0;}
 
 /* styles for Prism syntax highlighting */
-pre {border-radius: 5px; border: 1px dotted silver; background: #f1f7ff;box-shadow: inset 1px 1px 10px #e9f1fd;padding: 10px;}
+pre {background: #f1f7ff; margin: 0}
 code {font-family: Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace;}
 code[class*=language-], pre[class*=language-] {color: #000;text-shadow: 0 1px #ffffffc2;white-space: pre;word-spacing: normal;word-break: normal;word-wrap: normal;-moz-tab-size: 4;tab-size: 4;hyphens: none}
-/*code[class*=language-] ::selection, code[class*=language-]::selection, pre[class*=language-] ::selection, pre[class*=language-]::selection {text-shadow: none;background: #b3d4fc}*/
+code[class*=language-] ::selection, code[class*=language-]::selection, pre[class*=language-] ::selection, pre[class*=language-]::selection {text-shadow: none;background: #b3d4fc}
 .token.cdata, .token.comment, .token.doctype, .token.prolog {color: #708090}
 .token.punctuation {color: #999}
 .namespace {opacity: .7}
