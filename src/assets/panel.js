@@ -54,12 +54,12 @@ function prismHighlight(root) {
 	}
 }
 
-function reloadCurrentForm(root, templateOptions = {}) {
+function reload(root, templateOptions = {}, useValuesFromServer = false) {
 	var previewTabActive = root.querySelector('.tab-selected').dataset.tabName === 'preview';
 	var params = {
-		formId: getSelectedFormId(root),
-		templateName: getSelectedTemplateName(root),
-		options: templateOptions,
+		formId: useValuesFromServer ? null : getSelectedFormId(root),
+		templateName: useValuesFromServer ? null : getSelectedTemplateName(root),
+		templateOptions: templateOptions,
 		renderPreview: previewTabActive,
 	};
 
@@ -72,7 +72,6 @@ function reloadCurrentForm(root, templateOptions = {}) {
 	var spinner = root.querySelector('.spinner');
 	spinner.hidden = false;
 	window.fetch(window.location.href, {headers: {'X-Daku-Nette-Form-Blueprints-Ajax': JSON.stringify(params)}}).then(function (response) {
-		spinner.hidden = true;
 		return response.text();
 
 	}).then(function (text) {
@@ -83,6 +82,9 @@ function reloadCurrentForm(root, templateOptions = {}) {
 			console.log('Ajax error:', data['error']);
 
 		} else {
+			root.querySelectorAll('.form-link-list .form-link').forEach(el => el.classList.remove('form-link-selected'));
+			root.querySelector('#' + data['formId']).classList.add('form-link-selected');
+			root.querySelector('.template-select').value = data['templateName'];
 			root.querySelector('.template-options').innerHTML = data['templateOptions'];
 			root.querySelector('.html-editor-link').setAttribute('href', data['blueprintFileEditorUri']);
 			root.querySelector('.detail-latte pre code').innerHTML = data['latte'];
@@ -90,11 +92,11 @@ function reloadCurrentForm(root, templateOptions = {}) {
 			root.querySelector('.detail-css pre code').textContent = data['styles'];
 			setIframePreview(root, data['preview']);
 			root.querySelector('.detail-preview').dataset.rendered = previewTabActive ? '1' : '0';
-
 			addCommonListeners(root);
 			prismHighlight(root);
 			updateAutoResizable(root, panel);
 		}
+		spinner.hidden = true;
 	});
 
 	window.TracyAutoRefresh = tracyRefreshOld;
@@ -135,7 +137,7 @@ function addCommonListeners(root) {
 	root.querySelectorAll('.input-option').forEach(function (el) {
 		el.addEventListener('change', function (e) {
 			var value = el.type == 'checkbox' ? el.checked : el.value;
-			reloadCurrentForm(shadow, {[el.name]: value});
+			reload(shadow, {[el.name]: value});
 		});
 	});
 
@@ -175,12 +177,12 @@ if (panel.querySelector('.tracy-inner') && !panel.dataset.rendered) {
 		el.addEventListener('click', function (e) {
 			el.closest('.form-link-list').querySelectorAll('.form-link').forEach(el => el.classList.remove('form-link-selected'));
 			el.classList.add('form-link-selected');
-			reloadCurrentForm(shadow);
+			reload(shadow);
 		});
 	});
 
 	// template switching
-	shadow.querySelector('.template-select').addEventListener('change', (e) => reloadCurrentForm(shadow));
+	shadow.querySelector('.template-select').addEventListener('change', (e) => reload(shadow));
 
 	addCommonListeners(shadow);
 
@@ -194,7 +196,7 @@ if (panel.querySelector('.tracy-inner') && !panel.dataset.rendered) {
 			window.localStorage.setItem('form-blueprints-last-tab-name', el.dataset.tabName);
 			var previewRendered = parseInt(shadow.querySelector('.detail-preview').dataset.rendered)
 			if (el.dataset.tabName === 'preview' && !previewRendered) {
-				reloadCurrentForm(shadow);
+				reload(shadow);
 			}
 			updateAutoResizable(shadow, panel);
 		});
@@ -204,8 +206,10 @@ if (panel.querySelector('.tracy-inner') && !panel.dataset.rendered) {
 	var lastTabName = window.localStorage.getItem('form-blueprints-last-tab-name') || 'latte';
 	shadow.querySelector('.tab[data-tab-name=' + lastTabName).classList.add('tab-selected');
 	shadow.querySelector('.detail-' + lastTabName).hidden = false;
-	if (lastTabName === 'preview') {
-		reloadCurrentForm(shadow);
+
+	var windowMode = panel.classList.contains('tracy-mode-window');
+	if (lastTabName === 'preview' || windowMode) {
+		reload(shadow, {}, windowMode);
 	}
 
 	// auto resize according to panel

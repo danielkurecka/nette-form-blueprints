@@ -102,14 +102,16 @@ class BlueprintsPanel implements IBarPanel
 	{
 		try {
 			$params = Json::decode($_SERVER['HTTP_X_DAKU_NETTE_FORM_BLUEPRINTS_AJAX'], Json::FORCE_ARRAY);
-			$form = $this->findForm($params['formId']);
-			$template = $this->findTemplate($params['templateName']);
-			$template->setOptions($params['options'] + $this->getCurrentTemplateOptions($template));
-			$this->session['lastTemplateName'] = $params['templateName'];
-			$this->session['lastFormId'] = $params['formId'];
+			$form = $params['formId'] === null ? $this->getCurrentForm() : $this->findForm($params['formId']);
+			$template = $params['templateName'] === null ? $this->getCurrentTemplate() : $this->findTemplate($params['templateName']);
+			$template->setOptions($params['templateOptions'] + $this->getCurrentTemplateOptions($template));
+			$this->session['lastTemplateName'] = $template->getName();
+			$this->session['lastFormId'] = $this->getFormId($form);
 			$this->session['lastOptions'] = $template->getOptions() + ($this->session['lastOptions'] ?? []);
 			[$blueprintFile, $latte, $preview, $selectRangeListHtml] = $this->prepareBlueprint($form, $template, $params['renderPreview']);
 			$response = [
+				'formId' => $this->session['lastFormId'],
+				'templateName' => $this->session['lastTemplateName'],
 				'templateOptions' => (string) $this->createTemplateOptions($template),
 				'blueprintFileEditorUri' => Helpers::editorUri($blueprintFile),
 				'latte' => $latte,
