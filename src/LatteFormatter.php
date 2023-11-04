@@ -2,15 +2,10 @@
 
 namespace Daku\Nette\FormBlueprints;
 
-use Latte\Parser;
-use Latte\Token;
 use Nette\Utils\Html;
 
 class LatteFormatter
 {
-
-	/** @var Parser */
-	private $parser;
 
 	private $indetation;
 
@@ -27,119 +22,15 @@ class LatteFormatter
 	private $tokens;
 
 
-	public function __construct(Parser $parser, string  $indetation = "\t")
+	public function __construct(string $indetation = "\t")
 	{
-		$this->parser = $parser;
 		$this->indetation = $indetation;
 	}
 
 
 	public function format(string $content): string
 	{
-		$return = '';
-		$this->level = 0;
-		$this->tokens = $this->parser->parse($content);
-		$this->position = 0;
-		$inAttribute = false;
-
-		while (isset($this->tokens[$this->position])) {
-			$token = $this->tokens[$this->position];
-			$type = $token->type;
-
-			if ($type === Token::MACRO_TAG) {
-				if ($inAttribute) {
-					$return .= $token->text;
-
-				} elseif ($token->closing) {
-					$this->level--;
-					$return .= $this->getIndent() . trim($token->text) . "\n";
-
-				} elseif (!$token->empty && $this->isPairedMacro($token->name)) {
-					if (in_array($token->name, $this->singleLineMacroTags, true)) {
-						$line = $this->getIndent() . trim($token->text);
-						$this->position++;
-
-						while (isset($this->tokens[$this->position])) {
-							$t = $this->tokens[$this->position];
-							$line .= $t->text;
-							if ($t->type === Token::MACRO_TAG && $t->closing && $t->name === $token->name) {
-								break;
-							}
-							$this->position++;
-						}
-						$return .= $line . "\n";
-
-					} else {
-						$return .= $this->getIndent() . trim($token->text) . "\n";
-						$this->level++;
-					}
-
-				} else {
-					$return .= $this->getIndent() . trim($token->text) . "\n";
-				}
-
-			} elseif ($type === Token::HTML_TAG_BEGIN) {
-				if ($token->closing) {
-					$this->level--;
-					$return .= $this->getIndent() . trim($token->text);
-
-				} elseif ($token->name !== null && $this->isPairedTag($token->name)) {
-					if (in_array($token->name, $this->singleLineTags, true)) {
-						$backupPos = $this->position;
-
-						$line = $this->fetchUntil(function (Token $t) use ($token) {
-							return $t->type === Token::HTML_TAG_BEGIN && $t->closing && $t->name === $token->name;
-						});
-
-						if ($token->name !== 'textarea' && $this->exceedsMaxLineLenght($line)) {
-							$this->position = $backupPos;
-							$return .= $this->getIndent() . trim($token->text);
-							$this->level++;
-
-						} else {
-							$return .= $this->getIndent() . trim($line);
-						}
-
-					} else {
-						$return .= $this->getIndent() . trim($token->text);
-						$this->level++;
-					}
-
-				} else {
-					$return .= $this->getIndent() . trim($token->text);
-				}
-
-			} elseif ($type === Token::HTML_TAG_END) {
-				$inAttribute = false;
-				$return .= trim($token->text) . "\n";
-
-			} elseif ($type === Token::HTML_ATTRIBUTE_BEGIN) {
-				$inAttribute = true;
-				$return .= $token->text;
-
-			} elseif ($type === Token::HTML_ATTRIBUTE_END) {
-				$inAttribute = false;
-				$return .= $token->text;
-
-			} elseif ($type === Token::TEXT) {
-				if ($inAttribute) {
-					$return .= $token->text;
-
-				} else {
-					$text = trim(preg_replace('~\s+~', ' ', $token->text));
-					if ($text !== '') {
-						$return .= $this->getIndent() . $text . "\n";
-					}
-				}
-
-			} else {
-				$return .= trim($token->text);
-			}
-
-			$this->position++;
-		}
-
-		return $return;
+		return $content;
 	}
 
 	

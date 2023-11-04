@@ -13,6 +13,7 @@ use Nette\Application\UI\Presenter;
 use Nette\Bridges\ApplicationLatte\ILatteFactory;
 use Nette\Bridges\ApplicationLatte\Template as LatteTemplate;
 use Nette\Bridges\FormsLatte\FormMacros;
+use Nette\Bridges\FormsLatte\FormsExtension;
 use Nette\Utils\Arrays;
 use Nette\Utils\FileSystem;
 use Nette\Utils\Html;
@@ -150,17 +151,13 @@ class BlueprintsPanel implements IBarPanel
 	{
 		$latte = $this->latteFactory->create();
 		$latte->addProvider('uiControl', [$form->getName() => $form]);
-		$latte->onCompile[] = function (Engine $engine) {
-			FormMacros::install($engine->getCompiler());
-		};
-
+		$latte->addExtension(new FormsExtension);
 		$latte->setLoader(new class extends FileLoader {
 			public function isExpired($file, $time): bool
 			{
 				return true;
 			}
 		});
-
 		$latteTempalte = new LatteTemplate($latte);
 		$latteTempalte->setFile($latteFile);
 		return (string) $latteTempalte;
