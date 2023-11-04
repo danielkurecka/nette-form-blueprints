@@ -27,7 +27,7 @@ class Bootstrap5Template extends BaseTemplate
 	{
 		$options =  parent::getAvailableOptions();
 		return $options	+ [
-			'labels' => new OptionDefinition('Labels', '', OptionDefinition::TYPE_SELECT, ['standard' => 'standard', 'placeholders' => 'placeholders', 'floating' => 'floating'], ''),
+			'labels' => new OptionDefinition('Labels', 'Note: floating labels does not support sizing', OptionDefinition::TYPE_SELECT, ['standard' => 'standard', 'placeholders' => 'placeholders', 'floating' => 'floating'], ''),
 			'inputSize' => new OptionDefinition('Input size', '', OptionDefinition::TYPE_SELECT, ['' => 'default', 'sm' => 'small', 'lg' => 'large'], ''),
 		];
 	}
