@@ -13,15 +13,17 @@
 	],
 
 	"require": {
-		"php": ">=7.1",
-		"nette/di": "^3.0.1",
-		"nette/forms": "^3.0",
-		"nette/utils": "^3.0",
-		"tracy/tracy": "^2.6.5"
+		"php": ">=8.0",
+		"nette/application": "^3.1.6",
+		"nette/di": "^3.0",
+		"nette/forms": "^3.1",
+		"latte/latte": "^3.0",
+		"tracy/tracy": "^2.9",
+		"nette/utils": "^3.2 | ^4.0"
 	},
 
 	"require-dev": {
-		"nette/nette": "^3.0",
+		"nette/bootstrap": "^3.0",
 		"nette/tester": "^2.3.2"
 	},
 
@@ -36,5 +38,9 @@
 			"Daku\\Nette\\FormBlueprints\\Tests\\": "tests/automated",
 			"Daku\\Nette\\FormBlueprints\\Tests\\TestApp\\": "tests/testApp/app"
 		}
+	},
+
+	"config": {
+		"sort-packages": true
 	}
 }
