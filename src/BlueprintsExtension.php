@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Daku\Nette\FormBlueprints;
 
+use Daku\Nette\FormBlueprints\LatteLegacy\Parser;
 use Daku\Nette\FormBlueprints\Templates\Bootstrap3HorizontalTemplate;
 use Daku\Nette\FormBlueprints\Templates\Bootstrap3InlineTemplate;
 use Daku\Nette\FormBlueprints\Templates\Bootstrap3Template;
@@ -74,7 +75,8 @@ class BlueprintsExtension extends CompilerExtension
 	public function beforeCompile()
 	{
 		$builder = $this->getContainerBuilder();
-		$formatter = new Statement(LatteFormatter::class, [$this->config['indentation']]);
+		$parser = new Statement(Parser::class);
+		$formatter = new Statement(LatteFormatter::class, [$parser, $this->config['indentation']]);
 
 		$builder->addDefinition($this->prefix('generator'))
 			->setFactory(BlueprintsGenerator::class, [$formatter]);

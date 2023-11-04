@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Daku\Nette\FormBlueprints\Tests;
 
 use Daku\Nette\FormBlueprints\LatteFormatter;
-use Latte\Parser;
+use Daku\Nette\FormBlueprints\LatteLegacy\Parser;
 use Nette\Utils\FileSystem;
 use Tester\Assert;
 use Tester\TestCase;
@@ -15,8 +15,7 @@ require __DIR__ . '/bootstrap.php';
 class LatteFormatterTest extends TestCase
 {
 
-	/** @var LatteFormatter */
-	private $formatter;
+	private LatteFormatter $formatter;
 
 
 	public function __construct()
@@ -34,7 +33,6 @@ class LatteFormatterTest extends TestCase
 		$expected = FileSystem::read($afterFile);
 		Assert::same($expected, $actual);
 	}
-
 
 	public function provideFixtureFiles()
 	{
