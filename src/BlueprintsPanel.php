@@ -38,7 +38,7 @@ class BlueprintsPanel implements IBarPanel
 	private $forms = [];
 
 	/** @var array */
-	private $session;
+	private $state;
 
 
 	/**
@@ -84,8 +84,7 @@ class BlueprintsPanel implements IBarPanel
 	{
 		if ($this->forms) {
 			FileSystem::createDir($this->tempDir);
-			$_SESSION['__DAKU_NETTE_FORM_BLUEPRITNS'] = $_SESSION['__DAKU_NETTE_FORM_BLUEPRITNS'] ?? [];
-			$this->session = &$_SESSION['__DAKU_NETTE_FORM_BLUEPRITNS'];
+			$this->state = is_file($this->getStateFile()) ? Json::decode(FileSystem::read($this->getStateFile()), Json::FORCE_ARRAY) : [];
 
 			if (isset($_SERVER['HTTP_X_DAKU_NETTE_FORM_BLUEPRINTS_AJAX'])) {
 				$this->handleAjaxRequest();
@@ -105,13 +104,13 @@ class BlueprintsPanel implements IBarPanel
 			$form = $params['formId'] === null ? $this->getCurrentForm() : $this->findForm($params['formId']);
 			$template = $params['templateName'] === null ? $this->getCurrentTemplate() : $this->findTemplate($params['templateName']);
 			$template->setOptions($params['templateOptions'] + $this->getCurrentTemplateOptions($template));
-			$this->session['lastTemplateName'] = $template->getName();
-			$this->session['lastFormId'] = $this->getFormId($form);
-			$this->session['lastOptions'] = $template->getOptions() + ($this->session['lastOptions'] ?? []);
+			$this->state['lastTemplateName'] = $template->getName();
+			$this->state['lastFormId'] = $this->getFormId($form);
+			$this->state['lastOptions'] = $template->getOptions() + ($this->state['lastOptions'] ?? []);
 			[$blueprintFile, $latte, $preview, $selectRangeListHtml] = $this->prepareBlueprint($form, $template, $params['renderPreview']);
 			$response = [
-				'formId' => $this->session['lastFormId'],
-				'templateName' => $this->session['lastTemplateName'],
+				'formId' => $this->state['lastFormId'],
+				'templateName' => $this->state['lastTemplateName'],
 				'templateOptions' => (string) $this->createTemplateOptions($template),
 				'blueprintFileEditorUri' => Helpers::editorUri($blueprintFile),
 				'latte' => $latte,
@@ -119,6 +118,7 @@ class BlueprintsPanel implements IBarPanel
 				'preview' => $preview,
 				'styles' => $template->getStyles(),
 			];
+			FileSystem::write($this->getStateFile(),  Json::encode($this->state));
 
 		} catch (\Throwable $e) {
 			$response = ['error' => (string) $e];
@@ -223,22 +223,22 @@ class BlueprintsPanel implements IBarPanel
 
 	private function getCurrentForm(): Form
 	{
-		$form = isset($this->session['lastFormId']) ? $this->findForm($this->session['lastFormId'], false) : null;
+		$form = isset($this->state['lastFormId']) ? $this->findForm($this->state['lastFormId'], false) : null;
 		return $form ?: $this->forms[0];
 	}
 
 
 	private function getCurrentTemplate(): Template
 	{
-		$template = isset($this->session['lastTemplateName']) ? $this->findTemplate($this->session['lastTemplateName'], false) : null;
+		$template = isset($this->state['lastTemplateName']) ? $this->findTemplate($this->state['lastTemplateName'], false) : null;
 		return $template ?: $this->templates[0];
 	}
 
 
 	private function getCurrentTemplateOptions(Template $template): array
 	{
-		if (isset($this->session['lastOptions'])) {
-			$sessionOptions = array_intersect_key($this->session['lastOptions'], $template->getOptions());
+		if (isset($this->state['lastOptions'])) {
+			$sessionOptions = array_intersect_key($this->state['lastOptions'], $template->getOptions());
 			return $sessionOptions + $template->getOptions();
 		}
 		return $template->getOptions();
@@ -270,6 +270,12 @@ class BlueprintsPanel implements IBarPanel
 		if ($throw) {
 			throw new \InvalidArgumentException("Unknown template '$templateName'.");
 		}
+	}
+
+
+	private function getStateFile(): string
+	{
+		return $this->tempDir . '/state.json';
 	}
 
 }

@@ -11,5 +11,4 @@ $configurator->setTempDirectory(__DIR__ . '/temp');
 $configurator->addConfig(__DIR__ . '/app/config.neon');
 // error_reporting(E_ALL & ~E_DEPRECATED);
 $container = $configurator->createContainer();
-Tracy\Debugger::getBar()->addPanel(new Nette\Bridges\HttpTracy\SessionPanel);
 $container->getByType(Nette\Application\Application::class)->run();
