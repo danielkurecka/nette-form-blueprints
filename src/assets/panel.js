@@ -41,6 +41,9 @@ function copyToClipboard(root, element) {
 function isolateToShadow(templateElement) {
 	var host = document.createElement('div');
 	host.style.all = 'initial';
+	host.style.display = 'flex';
+	host.style.overflow = 'hidden';
+	host.style.flex = '1';
 	templateElement.before(host);
 	var shadow = host.attachShadow({'mode': 'open'});
 	shadow.append(templateElement.content.cloneNode(true));
@@ -94,7 +97,6 @@ function reload(root, templateOptions = {}, useValuesFromServer = false) {
 			root.querySelector('.detail-preview').dataset.rendered = previewTabActive ? '1' : '0';
 			addCommonListeners(root);
 			prismHighlight(root);
-			updateAutoResizable(root, panel);
 		}
 		spinner.hidden = true;
 	});
@@ -109,27 +111,10 @@ function setIframePreview(root, previewContent) {
 	var iframe = document.createElement('iframe')
 	iframe.srcdoc = previewContent;
 	iframe.scrolling = 'no';
-	iframe.onload = () => adjustIframeHeightByItsContent(iframe);
-	var previewElement = root.querySelector('.detail-preview');
+	iframe.onload = () => iframe.style.height = iframe.contentWindow.document.documentElement.scrollHeight + 'px';
+	var previewElement = root.querySelector('.detail-preview div');
 	previewElement.innerHTML = '';
 	previewElement.appendChild(iframe);
-}
-
-function adjustIframeHeightByItsContent(iframeElement) {
-	iframeElement.style.height = iframeElement.contentWindow.document.documentElement.scrollHeight + 'px';
-}
-
-function updateAutoResizable(root, panel) {
-	var panelRect = panel.getBoundingClientRect();
-	requestAnimationFrame(function () {
-		root.querySelectorAll('.auto-resizable').forEach(function (el) {
-			if (el.offsetParent) {
-				var rect = el.getBoundingClientRect();
-				el.style.maxWidth = (panelRect.width - (rect.left - panelRect.left) - 15) + 'px';
-				el.style.maxHeight = (panelRect.height - (rect.top - panelRect.top) - 35) + 'px';
-			}
-		});
-	});
 }
 
 function addCommonListeners(root) {
@@ -198,7 +183,6 @@ if (panel.querySelector('.tracy-inner') && !panel.dataset.rendered) {
 			if (el.dataset.tabName === 'preview' && !previewRendered) {
 				reload(shadow);
 			}
-			updateAutoResizable(shadow, panel);
 		});
 	});
 
@@ -211,15 +195,6 @@ if (panel.querySelector('.tracy-inner') && !panel.dataset.rendered) {
 	if (lastTabName === 'preview' || windowMode) {
 		reload(shadow, {}, windowMode);
 	}
-
-	// auto resize according to panel
-	new ResizeObserver(() => {
-		updateAutoResizable(shadow, panel);
-		var iframe = shadow.querySelector('.detail-preview iframe');
-		if (iframe) {
-			adjustIframeHeightByItsContent(iframe);
-		}
-	}).observe(panel);
 
 	// syntax highlighting using Prism
 	var prismIframe = shadow.querySelector('.prism-iframe');

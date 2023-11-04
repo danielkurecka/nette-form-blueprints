@@ -1,11 +1,13 @@
 * {box-sizing: border-box;}
 h2, h3 {font: normal normal 16px/1.4 Tahoma, sans-serif;color: #575753;margin: 0 0 5px 0;}
 h3 {margin: 10px 0 5px 0;font-size: 14px;}
-.container {display: flex;font: normal normal 12px/1.5 sans-serif;background: white;color: #333;margin: 0 10px 10px 5px;}
-aside {padding-right: 10px;flex: 0 0 180px;}  main {width: 100%;}
+aside, main {font: normal normal 12px/1.5 sans-serif;background: white;color: #333;}
+aside {padding-right: 10px;flex: 0 0 180px; overflow-x: auto;}
+main {display: flex; flex-direction: column; flex: 1; overflow: hidden;}
 .tab-row {display: flex;border-bottom: 1px solid #d6d6d6;margin-bottom: 10px;}
 .tab {padding: 10px;user-select: none;}
 .tab-selected {font-weight: bold;border: 1px solid #d6d6d6;border-radius: 3px 3px 0 0;border-bottom: none;box-shadow: 0px 2px 0px 0px #fff;}
+.detail {display: flex; flex: 1; overflow: hidden; flex-direction: column}
 .form-link-list {margin-bottom: 5px}
 a, .form-link:not(.form-link-selected), .tab:not(.tab-selected) {color: #125eae;text-decoration: none;cursor: pointer;}
 .form-link-selected {font-weight: bold;}
@@ -24,8 +26,9 @@ li {padding: 0 0 2px 0;}
 @keyframes spinner { to { transform: rotate(360deg); } }
 .prism-iframe {width: 0; height: 0; border: 0; position: absolute;}
 [hidden] {display: none !important;}
-.auto-resizable {max-width: 580px;max-height: 390px;overflow: auto;padding: 5px 10px 5px 0;}
 .code-wrap {border-radius: 5px; border: 1px dotted silver; background: #f1f7ff;box-shadow: inset 1px 1px 10px #e9f1fd;padding-left: 10px;margin: 10px 0;}
+.code-wrap code {text-wrap: wrap !important; overflow-wrap: anywhere !important}
+.overflow-auto {overflow: auto;}
 
 /* styles for Prism syntax highlighting */
 pre {background: #f1f7ff; margin: 0}

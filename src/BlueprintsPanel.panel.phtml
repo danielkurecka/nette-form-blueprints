@@ -18,7 +18,6 @@ use Tracy\Helpers;
 			<style>
 				<?php readfile(__DIR__ . '/assets/panel.css'); ?>
 			</style>
-			<div class="container">
 				<aside>
 					<h2>Added forms:</h2>
 					<ul class="form-link-list">
@@ -58,26 +57,27 @@ use Tracy\Helpers;
 					</div>
 					<?php [$file, $latteEscaped, , $selectRangeListHtml] = $this->prepareBlueprint($this->getCurrentForm(), $this->getCurrentTemplate()) ?>
 					<div class="detail detail-latte" hidden>
-						<a href="#" class="copy-button">Copy to clipboard</a> |
-						<a href="<?= Helpers::editorUri($file) ?>" class="html-editor-link" title="<?= $file ?>">Open in editor</a>
-						<span class="tooltip-copied" hidden>Copied</span>
-						<div title="After selecting press Ctrl+C to copy">
-							Select individual: <span class="select-range-list"><?= $selectRangeListHtml ?></span>
+						<div>
+							<a href="#" class="copy-button">Copy to clipboard</a> |
+							<a href="<?= Helpers::editorUri($file) ?>" class="html-editor-link" title="<?= $file ?>">Open in editor</a>
+							<span class="tooltip-copied" hidden>Copied</span>
+							<div title="After selecting press Ctrl+C to copy">
+								Select individual: <span class="select-range-list"><?= $selectRangeListHtml ?></span>
+							</div>
 						</div>
-						<div class="code-wrap">
-							<pre class="auto-resizable"><code class="language-latte"><?= $latteEscaped ?></code></pre>
-						</div>
+						<pre class="code-wrap overflow-auto"><code class="language-latte"><?= $latteEscaped ?></code></pre>
 					</div>
-					<div class="detail detail-preview auto-resizable" data-rendered="0" hidden></div>
+					<div class="detail detail-preview" data-rendered="0" hidden>
+						<div class="overflow-auto"></div>
+					</div>
 					<div class="detail detail-css" hidden>
-						<a href="#" class="copy-button">Copy to clipboard</a>
-						<span class="tooltip-copied" hidden>Copied</span>
-						<div class="code-wrap">
-							<pre class="auto-resizable"><code class="language-latte"><?= htmlspecialchars($this->getCurrentTemplate()->getStyles()) ?></code></pre>
+						<div>
+							<a href="#" class="copy-button">Copy to clipboard</a>
+							<span class="tooltip-copied" hidden>Copied</span>
 						</div>
+						<pre class="code-wrap overflow-auto"><code class="language-latte"><?= htmlspecialchars($this->getCurrentTemplate()->getStyles()) ?></code></pre>
 					</div>
 				</main>
-			</div>
 			<iframe class="prism-iframe" data-srcdoc='<script data-manual src="https://cdn.jsdelivr.net/combine/npm/prismjs@1.25.0,npm/prismjs@1.25.0/components/prism-markup-templating.min.js,npm/prismjs@1.25.0/components/prism-php.min.js,npm/prismjs@1.25.0/components/prism-latte.min.js,npm/prismjs@1.25.0/plugins/keep-markup/prism-keep-markup.min.js"></script>'></iframe>
 		</template>
 		<script>
@@ -86,9 +86,14 @@ use Tracy\Helpers;
 			})();
 		</script>
 		<style class="tracy-debug">
-			div#tracy-debug #tracy-debug-panel-Daku-Nette-FormBlueprints-BlueprintsPanel {width: 800px;height: 550px;max-width: initial;max-height: initial; overflow: hidden}
-			body#tracy-debug #tracy-debug-panel-Daku-Nette-FormBlueprints-BlueprintsPanel {height: 100vh; overflow: hidden}
-			#tracy-debug-panel-Daku-Nette-FormBlueprints-BlueprintsPanel .tracy-inner {overflow: hidden}
+			#tracy-debug-panel-Daku-Nette-FormBlueprints-BlueprintsPanel:not(.tracy-mode-window):not(.tracy-panel-resized) {
+				overflow: hidden;
+				width: 800px;
+				height: 550px;
+				max-width: 800px !important;
+				max-height: 550px !important;
+			}
+			#tracy-debug-panel-Daku-Nette-FormBlueprints-BlueprintsPanel .tracy-inner {overflow: hidden; display: flex; flex: 1}
 		</style>
 	<?php else: ?>
 		<p>No forms added to the panel.</p>
