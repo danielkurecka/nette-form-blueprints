@@ -10,7 +10,7 @@ use Latte\Loaders\FileLoader;
 use Nette\Application\Application;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
-use Nette\Bridges\ApplicationLatte\ILatteFactory;
+use Nette\Bridges\ApplicationLatte\LatteFactory;
 use Nette\Bridges\ApplicationLatte\Template as LatteTemplate;
 use Nette\Bridges\FormsLatte\FormMacros;
 use Nette\Bridges\FormsLatte\FormsExtension;
@@ -32,7 +32,7 @@ class BlueprintsPanel implements IBarPanel
 	/** @var BlueprintsGenerator */
 	private $generator;
 
-	/** @var ILatteFactory */
+	/** @var LatteFactory */
 	private $latteFactory;
 
 	/** @var Form[] */
@@ -45,7 +45,7 @@ class BlueprintsPanel implements IBarPanel
 	/**
 	 * @param Template[] $templates
 	 */
-	public function __construct(string $tempDir, array $templates, BlueprintsGenerator $generator, ILatteFactory $latteFactory)
+	public function __construct(string $tempDir, array $templates, BlueprintsGenerator $generator, LatteFactory $latteFactory)
 	{
 		$this->tempDir = $tempDir;
 		$this->templates = $templates;
