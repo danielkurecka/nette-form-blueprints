@@ -6,7 +6,9 @@ namespace Daku\Nette\FormBlueprints;
 
 use Daku\Nette\FormBlueprints\Templates\Template;
 use Nette\ComponentModel\Component;
+use Nette\ComponentModel\RecursiveComponentIterator;
 use Nette\Forms\Container;
+use Nette\Forms\Control;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Button;
@@ -41,8 +43,10 @@ class BlueprintsGenerator
 
 	public function generate(Form $formControl, Template $template): string
 	{
+		$childControls = $formControl->getComponents(true, Control::class);
+
 		if ($formControl->getTranslator()) { // workaround for issue #1
-			foreach ($formControl->getControls() as $control) {
+			foreach ($childControls as $control) {
 				if ($control instanceof BaseControl && $control->getCaption() === null) {
 					$control->setCaption(new Html);
 				}
@@ -65,7 +69,9 @@ class BlueprintsGenerator
 			}
 		}
 
-		$controls = $this->generateControls($formControl->getControls()->getArrayCopy(), $template);
+		assert($childControls instanceof \RecursiveArrayIterator);
+		$controls = $this->generateControls($childControls->getArrayCopy(), $template);
+
 		if ($controls !== '') {
 			$form->addHtml($template->createControlsWrap()->addHtml($controls));
 		}
@@ -90,7 +96,9 @@ class BlueprintsGenerator
 		foreach ($this->groupButtonsToArrayObject($toProcess) as $control) {
 			if ($control instanceof Container) {
 				$container = '{formContainer ' . $control->getName() . '}';
-				$container .= $this->generateControls($control->getControls()->getArrayCopy(), $template);
+				$childControls = $control->getComponents(true, Control::class);
+				assert($childControls instanceof \RecursiveArrayIterator);
+				$container .= $this->generateControls($childControls->getArrayCopy(), $template);
 				$container .= '{/formContainer}';
 				$return .= SelectMarkerHelpers::wrapWithMarker($container, $control->getName());
 
