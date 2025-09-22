@@ -69,8 +69,7 @@ class BlueprintsGenerator
 			}
 		}
 
-		assert($childControls instanceof \RecursiveArrayIterator);
-		$controls = $this->generateControls($childControls->getArrayCopy(), $template);
+		$controls = $this->generateControls(iterator_to_array($childControls), $template);
 
 		if ($controls !== '') {
 			$form->addHtml($template->createControlsWrap()->addHtml($controls));
@@ -97,8 +96,7 @@ class BlueprintsGenerator
 			if ($control instanceof Container) {
 				$container = '{formContainer ' . $control->getName() . '}';
 				$childControls = $control->getComponents(true, Control::class);
-				assert($childControls instanceof \RecursiveArrayIterator);
-				$container .= $this->generateControls($childControls->getArrayCopy(), $template);
+				$container .= $this->generateControls(iterator_to_array($childControls), $template);
 				$container .= '{/formContainer}';
 				$return .= SelectMarkerHelpers::wrapWithMarker($container, $control->getName());
 
