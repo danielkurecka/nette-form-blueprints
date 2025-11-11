@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Daku\Nette\FormBlueprints;
 
 use Daku\Nette\FormBlueprints\Templates\Template;
-use Latte\Engine;
 use Latte\Loaders\FileLoader;
 use Nette\Application\Application;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
+use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Bridges\ApplicationLatte\LatteFactory;
-use Nette\Bridges\ApplicationLatte\Template as LatteTemplate;
-use Nette\Bridges\FormsLatte\FormMacros;
 use Nette\Bridges\FormsLatte\FormsExtension;
 use Nette\Utils\Arrays;
 use Nette\Utils\FileSystem;
@@ -158,7 +156,7 @@ class BlueprintsPanel implements IBarPanel
 				return true;
 			}
 		});
-		$latteTempalte = new LatteTemplate($latte);
+		$latteTempalte = new DefaultTemplate($latte);
 		$latteTempalte->setFile($latteFile);
 		return (string) $latteTempalte;
 	}
