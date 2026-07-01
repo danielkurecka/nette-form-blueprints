@@ -141,7 +141,7 @@ class Bootstrap3HorizontalTemplateTest extends TestCase
 		Assert::same('<label n:name="foo" class="col-sm-2 control-label">foo</label>', $actual);
 
 		$actual = $this->template()->createLabel((new TextInput('Foo'))->setParent(null, 'foo'))->render();
-		Assert::same('<label n:name="foo" class="col-sm-2 control-label">{$formContainer[foo]->caption}</label>', $actual);
+		Assert::same('<label n:name="foo" class="col-sm-2 control-label">{$formContainer[foo]->getCaption()}</label>', $actual);
 	}
 
 }

@@ -87,7 +87,7 @@ class Bootstrap4InlineTemplateTest extends TestCase
 		Assert::same('<label n:name="foo" class="mb-2 mr-2">foo</label>', $actual);
 
 		$actual = $this->template()->createLabel((new TextInput('Foo'))->setParent(null, 'foo'))->render();
-		Assert::same('<label n:name="foo" class="mb-2 mr-2">{$formContainer[foo]->caption}</label>', $actual);
+		Assert::same('<label n:name="foo" class="mb-2 mr-2">{$formContainer[foo]->getCaption()}</label>', $actual);
 	}
 
 

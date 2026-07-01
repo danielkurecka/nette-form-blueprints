@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Daku\Nette\FormBlueprints\Tests\TestApp;
 
 use Daku\Nette\FormBlueprints\BlueprintsPanel;
+use Nette\Application\Attributes\Persistent;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
 use Nette\Forms\Container;
@@ -15,10 +16,10 @@ class HomepagePresenter extends Presenter
 	/** @var BlueprintsPanel @inject */
 	public $panel;
 
-	/** @var bool @persistent */
+	#[Persistent]
 	public $addLabels = true;
 
-	/** @var bool @persistent */
+	#[Persistent]
 	public $addErrors = false;
 
 

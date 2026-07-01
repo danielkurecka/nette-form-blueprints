@@ -131,7 +131,7 @@ abstract class BaseTemplate implements Template
 
 	public function createButton(Button $button): Html
 	{
-		return $this->createInput($button)->setAttribute('value', $button->caption === null ? $button->getName() : false);
+		return $this->createInput($button)->setAttribute('value', $button->getCaption() === null ? $button->getName() : false);
 	}
 
 
@@ -177,7 +177,7 @@ abstract class BaseTemplate implements Template
 
 	public function getCaption(BaseControl $control)
 	{
-		return (string) $control->caption === '' ? $control->getName() : '{' . $this->getFormVar($control) . '[' . $control->getName() . ']->caption}';
+		return (string) $control->getCaption() === '' ? $control->getName() : '{' . $this->getFormVar($control) . '[' . $control->getName() . ']->getCaption()}';
 	}
 
 

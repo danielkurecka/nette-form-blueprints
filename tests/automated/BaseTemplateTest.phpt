@@ -76,7 +76,7 @@ class BaseTemplateTest extends TestCase
 		Assert::same('<label n:name="foo">foo</label>', $actual);
 
 		$actual = $this->template()->createLabel((new TextInput('Foo'))->setParent(null, 'foo'))->render();
-		Assert::same('<label n:name="foo">{$formContainer[foo]->caption}</label>', $actual);
+		Assert::same('<label n:name="foo">{$formContainer[foo]->getCaption()}</label>', $actual);
 	}
 
 

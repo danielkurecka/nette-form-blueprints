@@ -43,7 +43,9 @@ class BlueprintsGenerator
 
 	public function generate(Form $formControl, Template $template): string
 	{
-		$childControls = $formControl->getComponents(true, Control::class);
+		$childControls = array_filter($formControl->getComponentTree(), function ($control) {
+			return $control instanceof Control;
+		});
 
 		if ($formControl->getTranslator()) { // workaround for issue #1
 			foreach ($childControls as $control) {

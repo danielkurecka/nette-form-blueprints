@@ -64,8 +64,11 @@ class BlueprintsPanel implements IBarPanel
 	{
 		$presenter = $application->getPresenter();
 		if ($presenter instanceof Presenter) {
-			foreach ($presenter->getComponents(true, Form::class) as $form) {
-				$this->addForm($form);
+			// foreach ($presenter->getComponents(true, Form::class) as $form) {
+			foreach ($presenter->getComponentTree() as $component) {
+				if ($component instanceof Form) {
+					$this->addForm($component);
+				}
 			}
 		}
 	}
