@@ -6,7 +6,6 @@ namespace Daku\Nette\FormBlueprints;
 
 use Daku\Nette\FormBlueprints\Templates\Template;
 use Nette\ComponentModel\Component;
-use Nette\ComponentModel\RecursiveComponentIterator;
 use Nette\Forms\Container;
 use Nette\Forms\Control;
 use Nette\Forms\ControlGroup;
@@ -22,7 +21,6 @@ use Nette\Forms\Controls\TextArea;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Controls\UploadControl;
 use Nette\Forms\Form;
-use Nette\Utils\FileSystem;
 use Nette\Utils\Html;
 
 class BlueprintsGenerator
@@ -85,10 +83,10 @@ class BlueprintsGenerator
 	private function generateControls(array $controls, Template $template): string
 	{
 		$toProcess = array_filter($controls, function ($control) {
-			if ($this->processedControls->contains($control)) {
+			if ($this->processedControls->offsetExists($control)) {
 				return false;
 			} else {
-				$this->processedControls->attach($control);
+				$this->processedControls->offsetSet($control);
 				return true;
 			}
 		});
